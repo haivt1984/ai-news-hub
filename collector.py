@@ -5,14 +5,18 @@ import feedparser
 import requests
 import sys
 
-# Bật in log tức thì trên console GitHub Actions
 sys.stdout.reconfigure(line_buffering=True)
 
 # ================= CẤU HÌNH THÔNG TIN =================
 RAW_KEY = os.getenv("GEMINI_API_KEY", "AQ.Ab8RN6KYtas-QV6fRTan1ggI_xUbns8DZCpyp3_kLGs2W58CEg")
 GEMINI_API_KEY = RAW_KEY.strip("[]'\" \t\n\r")
 
-RAW_SUPABASE = os.getenv("SUPABASE_URL", "https://lleeibzegmnycuingzgx.supabase.co").strip("[]'\" \t\n\r")
+# Tự động lọc sạch cú pháp Markdown nếu lỡ dán nhầm
+RAW_SUPABASE = os.getenv("SUPABASE_URL", "https://lleeibzegmnycuingzgx.supabase.co")
+if "](" in RAW_SUPABASE:
+    RAW_SUPABASE = RAW_SUPABASE.split("](")[-1].replace(")", "")
+RAW_SUPABASE = RAW_SUPABASE.strip("[]'\" \t\n\r")
+
 if not RAW_SUPABASE.startswith("http"):
     SUPABASE_URL = f"https://{RAW_SUPABASE}"
 else:
@@ -34,11 +38,10 @@ FEEDS = [
 
 ARTICLES_PER_FEED = 2
 
-GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+# Truyền key trực tiếp qua URL, không dùng header Authorization để tránh lỗi OAuth 401
+GEMINI_ENDPOINT = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
 GEMINI_HEADERS = {
-    "Content-Type": "application/json",
-    "Authorization": f"Bearer {GEMINI_API_KEY}",
-    "x-goog-api-key": GEMINI_API_KEY
+    "Content-Type": "application/json"
 }
 
 SUPABASE_ENDPOINT = f"{SUPABASE_URL}/rest/v1/articles"
@@ -111,8 +114,8 @@ for feed_info in FEEDS:
         print(f"    -> Đang xử lý: {original_title[:45]}...")
 
         prompt = f"""
-        Bạn là biên tập viên về Dinh dưỡng, Ẩm thực và Sức khỏe.
-        Hãy tóm tắt bài báo sau và trả về DUY NHẤT định dạng JSON hợp lệ:
+        Bạn là chuyên gia dinh dưỡng và ẩm thực sức khỏe.
+        Hãy tóm tắt bài báo sau và trả về DUY NHAT định dạng JSON:
 
         Nguồn: {source_name}
         Tiêu đề: {original_title}
@@ -121,7 +124,7 @@ for feed_info in FEEDS:
         Định dạng JSON:
         {{
           "title": "Tiêu đề hấp dẫn",
-          "summary": "Tóm tắt từ 2-3 câu",
+          "summary": "Tóm tắt 2-3 câu",
           "tips": "1 lời khuyên thực tế",
           "category": "Dinh dưỡng | Ẩm thực | Y học đời sống | Mẹo sức khỏe | Món ngon"
         }}
