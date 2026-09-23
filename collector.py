@@ -5,27 +5,24 @@ import feedparser
 import requests
 
 # ================= CẤU HÌNH THÔNG TIN =================
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AQ.Ab8RN6Kj1xNA69K9pKnN6b8v8bbl63wp3f2u51xZtkafuB2g6Q")
-SUPABASE_URL = os.getenv("SUPABASE_URL", "https://lleeibzegmnycuingzgx.supabase.co")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZWVpYnplZ21ueWN1aW5nemd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxMjc5OTUsImV4cCI6MjEwNTcwMzk5NX0.KrO8Y8qoKh0NIPYDL6wki7zGb-Lxi1xwWgQrX9xSXxE")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AQ.Ab8RN6Kj1xNA69K9pKnN6b8v8bbl63wp3f2u51xZtkafuB2g6Q").strip()
+SUPABASE_URL = os.getenv("SUPABASE_URL", "https://lleeibzegmnycuingzgx.supabase.co").strip()
+SUPABASE_KEY = os.getenv("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZWVpYnplZ21ueWN1aW5nemd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxMjc5OTUsImV4cCI6MjEwNTcwMzk5NX0.KrO8Y8qoKh0NIPYDL6wki7zGb-Lxi1xwWgQrX9xSXxE").strip()
 # ======================================================
 
-# Danh sách nguồn RSS Ẩm thực & Sức khỏe uy tín tại Việt Nam
+# Nguồn RSS chuẩn hóa
 FEEDS = [
     {"source": "VnExpress Sức Khỏe", "url": "https://vnexpress.net/rss/suc-khoe.rss"},
-    {"source": "VnExpress Ẩm Thực", "url": "https://vnexpress.net/rss/du-lich/am-thuc.rss"},
     {"source": "Tuổi Trẻ Sức Khỏe", "url": "https://tuoitre.vn/rss/suc-khoe.rss"},
     {"source": "Thanh Niên Sức Khỏe", "url": "https://thanhnien.vn/rss/suc-khoe.rss"},
-    {"source": "Dân Trí Sức Khỏe", "url": "https://dantri.com.vn/rss/suc-khoe.rss"}
+    {"source": "Dân Trí Sức Khỏe", "url": "https://dantri.com.vn/rss/suc-khoe.rss"},
+    {"source": "VietnamNet Sức Khỏe", "url": "https://vietnamnet.vn/rss/suc-khoe.rss"}
 ]
 
 ARTICLES_PER_FEED = 3
 
-GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent"
-GEMINI_HEADERS = {
-    "Content-Type": "application/json",
-    "x-goog-api-key": GEMINI_API_KEY
-}
+# Đưa trực tiếp API Key vào tham số URL để tránh lỗi Header 401
+GEMINI_ENDPOINT = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key={GEMINI_API_KEY}"
 
 SUPABASE_ENDPOINT = f"{SUPABASE_URL}/rest/v1/articles"
 SUPABASE_HEADERS = {
@@ -51,7 +48,7 @@ def is_article_exists(url):
 
 def call_gemini(payload, max_retries=4):
     for attempt in range(max_retries):
-        res = requests.post(GEMINI_ENDPOINT, headers=GEMINI_HEADERS, json=payload)
+        res = requests.post(GEMINI_ENDPOINT, json=payload)
         if res.status_code == 200:
             return res.json()
         elif res.status_code == 429:
@@ -90,7 +87,7 @@ for feed_info in FEEDS:
 
         prompt = f"""
         Ban la chuyen gia bien tap tap chi ve Suc khoe, Dinh duong va Am thuc doi song.
-        Hay phan tich bai bao sau va bien tap thanh ban tin tinh gon, thuc te theo dinh dang JSON:
+        Hay doc bai bao sau va bien tap thanh ban tin tinh gon, thuc te theo dinh dang JSON:
 
         Nguon: {source_name}
         Tieu de goc: {original_title}
