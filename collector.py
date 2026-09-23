@@ -3,15 +3,21 @@ import json
 import time
 import feedparser
 import requests
-
-# Bật in log ngay lập tức lên console của GitHub Actions
 import sys
+
+# Đảm bảo in log trực tiếp lên GitHub Actions
 sys.stdout.reconfigure(line_buffering=True)
 
 # ================= CẤU HÌNH THÔNG TIN =================
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AQ.Ab8RN6IhpENXaokc_b-nEkmHEA_hGRyA0-6WXSdPY7XCWhaQJA").strip()
-SUPABASE_URL = os.getenv("SUPABASE_URL", "https://lleeibzegmnycuingzgx.supabase.co").strip()
+RAW_SUPABASE_URL = os.getenv("SUPABASE_URL", "https://lleeibzegmnycuingzgx.supabase.co").strip()
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZWVpYnplZ21ueWN1aW5nemd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxMjc5OTUsImV4cCI6MjEwNTcwMzk5NX0.KrO8Y8qoKh0NIPYDL6wki7zGb-Lxi1xwWgQrX9xSXxE").strip()
+
+# Đảm bảo SUPABASE_URL luôn có https://
+if not RAW_SUPABASE_URL.startswith("http://") and not RAW_SUPABASE_URL.startswith("https://"):
+    SUPABASE_URL = f"https://{RAW_SUPABASE_URL}"
+else:
+    SUPABASE_URL = RAW_SUPABASE_URL
 # ======================================================
 
 FEEDS = [
@@ -22,10 +28,10 @@ FEEDS = [
     {"source": "VietnamNet Sức Khỏe", "url": "https://vietnamnet.vn/rss/suc-khoe.rss"}
 ]
 
-# Chỉ lấy 2 bài mỗi nguồn để quét siêu nhanh (chỉ mất ~2 phút là xong cả luồng)
 ARTICLES_PER_FEED = 2
 
-GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+# Đổi lại model chuẩn gemini-3.6-flash (hoặc fallback sang gemini-1.5-flash)
+GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent"
 GEMINI_HEADERS = {
     "Content-Type": "application/json",
     "x-goog-api-key": GEMINI_API_KEY
@@ -56,17 +62,21 @@ def is_article_exists(url):
 def call_gemini(payload, max_retries=3):
     for attempt in range(max_retries):
         try:
-            # Luon luon dat timeout=30 giay de khong bao gio bi treo vo han
             res = requests.post(GEMINI_ENDPOINT, headers=GEMINI_HEADERS, json=payload, timeout=30)
             if res.status_code == 200:
                 return res.json()
             elif res.status_code == 429:
                 wait_time = 15 + (attempt * 10)
-                print(f"      [!] Bị nghẽn rate limit (429), chờ {wait_time}s...")
+                print(f"      [!] Rate limit (429), cho {wait_time}s...")
                 time.sleep(wait_time)
-            elif res.status_code == 401:
-                print(f"      [x] Lỗi khóa API 401 Unauthorized!")
-                raise Exception("Lỗi khóa 401")
+            elif res.status_code == 404:
+                # Nếu model 3.6-flash báo 404, tự động đổi sang 1.5-flash để chạy ngay
+                alt_endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+                alt_res = requests.post(alt_endpoint, headers=GEMINI_HEADERS, json=payload, timeout=30)
+                if alt_res.status_code == 200:
+                    return alt_res.json()
+                print(f"      [!] HTTP 404 ca 2 model: {res.text[:80]}")
+                time.sleep(5)
             else:
                 print(f"      [!] HTTP {res.status_code}: {res.text[:100]}")
                 time.sleep(5)
@@ -74,8 +84,6 @@ def call_gemini(payload, max_retries=3):
             print(f"      [!] Gemini timeout sau 30s. Thu lai...")
             time.sleep(5)
         except Exception as err:
-            if "401" in str(err):
-                raise err
             time.sleep(5)
             
     raise Exception("Vuot qua so lan thu goi Gemini.")
@@ -84,7 +92,7 @@ print("=== BAT DAU TIEN TRINH THU THAP AM THUC & SUC KHOE ===")
 
 for feed_info in FEEDS:
     source_name = feed_info["source"]
-    print(f"\n[*] Đang quét: {source_name}")
+    print(f"\n[*] Dang quet: {source_name}")
 
     try:
         raw_xml = requests.get(feed_info["url"], headers=REQUEST_HEADERS, timeout=10).content
@@ -94,7 +102,7 @@ for feed_info in FEEDS:
         continue
 
     entries = parsed_feed.entries[:ARTICLES_PER_FEED]
-    print(f"    Tìm thấy {len(parsed_feed.entries)} bài. Tiến hành xử lý {len(entries)} bài mới nhất:")
+    print(f"    Tim thay {len(parsed_feed.entries)} bai. Tien hanh xu ly {len(entries)} bai moi nhat:")
 
     for entry in entries:
         original_title = entry.title
@@ -102,14 +110,14 @@ for feed_info in FEEDS:
         description = entry.description if hasattr(entry, 'description') else entry.get('summary', '')
 
         if is_article_exists(original_url):
-            print(f"    [-] Đã tồn tại: {original_title[:40]}...")
+            print(f"    [-] Da ton tai: {original_title[:40]}...")
             continue
 
-        print(f"    -> Đang xử lý: {original_title[:45]}...")
+        print(f"    -> Dang xu ly: {original_title[:45]}...")
 
         prompt = f"""
         Ban la bien tap vien ve Dinh duong, Am thuc va Suc khoe.
-        Hay tom tat bai bao sau va tra ve DUY NHAT dinh dang JSON (khong kem them loi giai thich nao khac):
+        Hay tom tat bai bao sau va tra ve DUY NHAT dinh dang JSON:
 
         Nguon: {source_name}
         Tieu de: {original_title}
@@ -147,14 +155,13 @@ for feed_info in FEEDS:
 
             db_res = requests.post(SUPABASE_ENDPOINT, headers=SUPABASE_HEADERS, json=record, timeout=10)
             if db_res.status_code in [200, 201]:
-                print(f"       ✔ Đã nạp thành công vào website!")
+                print(f"       ✔ Da nap thanh cong vao website!")
             else:
-                print(f"       ✖ Lỗi Supabase: {db_res.status_code}")
+                print(f"       ✖ Loi Supabase: {db_res.status_code} - {db_res.text}")
 
         except Exception as e:
-            print(f"       ✖ Bỏ qua bài: {e}")
+            print(f"       ✖ Bo qua bai: {e}")
 
-        # Giữ khoảng cách 3 giây giữa các bài để không bị phạt rate limit
         time.sleep(3)
 
 print("\n=== HOAN TAT! WEBSITE DA SAN SANG XEM TIN ===")
