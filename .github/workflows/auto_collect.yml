@@ -1,0 +1,29 @@
+name: Daily AI News Collector
+
+on:
+  schedule:
+    # Chạy tự động vào lúc 06:00 và 18:00 mỗi ngày (giờ Việt Nam)
+    - cron: '0 23,11 * * *'
+  workflow_dispatch: # Nút bấm để chạy thủ công bất cứ lúc nào trên web
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tải mã nguồn về máy ảo
+        uses: actions/checkout@v4
+
+      - name: Cài đặt môi trường Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cài đặt thư viện cần thiết
+        run: pip install requests feedparser
+
+      - name: Chạy script cào tin và tóm tắt AI
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: python collector.py
