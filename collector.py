@@ -13,7 +13,8 @@ FEEDS = [
     {"source": "TechCrunch AI", "url": "https://techcrunch.com/category/artificial-intelligence/feed/"},
     {"source": "The Verge AI", "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"},
     {"source": "MIT Tech Review", "url": "https://www.technologyreview.com/feed/"},
-    {"source": "Wired AI", "url": "https://www.wired.com/feed/tag/ai/latest/rss"}
+    {"source": "Wired AI", "url": "https://www.wired.com/feed/tag/ai/latest/rss"},
+    {"source": "Microsoft AI", "url": "https://blogs.microsoft.com/ai/feed/"}
 ]
 
 ARTICLES_PER_FEED = 3
