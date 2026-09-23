@@ -4,17 +4,19 @@ import time
 import feedparser
 import requests
 
-# Tự động lấy từ biến môi trường của GitHub Actions, nếu chạy ở máy local thì lấy giá trị mặc định
+# ================= CẤU HÌNH THÔNG TIN =================
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AQ.Ab8RN6Kj1xNA69K9pKnN6b8v8bbl63wp3f2u51xZtkafuB2g6Q")
 SUPABASE_URL = os.getenv("SUPABASE_URL", "https://lleeibzegmnycuingzgx.supabase.co")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZWVpYnplZ21ueWN1aW5nemd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxMjc5OTUsImV4cCI6MjEwNTcwMzk5NX0.KrO8Y8qoKh0NIPYDL6wki7zGb-Lxi1xwWgQrX9xSXxE")
+# ======================================================
 
+# Danh sách nguồn RSS Ẩm thực & Sức khỏe uy tín tại Việt Nam
 FEEDS = [
-    {"source": "TechCrunch AI", "url": "https://techcrunch.com/category/artificial-intelligence/feed/"},
-    {"source": "The Verge AI", "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"},
-    {"source": "MIT Tech Review", "url": "https://www.technologyreview.com/feed/"},
-    {"source": "Wired AI", "url": "https://www.wired.com/feed/tag/ai/latest/rss"},
-    {"source": "Microsoft AI", "url": "https://blogs.microsoft.com/ai/feed/"}
+    {"source": "VnExpress Sức Khỏe", "url": "https://vnexpress.net/rss/suc-khoe.rss"},
+    {"source": "VnExpress Ẩm Thực", "url": "https://vnexpress.net/rss/du-lich/am-thuc.rss"},
+    {"source": "Tuổi Trẻ Sức Khỏe", "url": "https://tuoitre.vn/rss/suc-khoe.rss"},
+    {"source": "Thanh Niên Sức Khỏe", "url": "https://thanhnien.vn/rss/suc-khoe.rss"},
+    {"source": "Dân Trí Sức Khỏe", "url": "https://dantri.com.vn/rss/suc-khoe.rss"}
 ]
 
 ARTICLES_PER_FEED = 3
@@ -33,7 +35,6 @@ SUPABASE_HEADERS = {
     "Prefer": "return=minimal"
 }
 
-# Giả lập trình duyệt để tránh bị chặn RSS
 REQUEST_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 }
@@ -54,17 +55,14 @@ def call_gemini(payload, max_retries=4):
         if res.status_code == 200:
             return res.json()
         elif res.status_code == 429:
-            # Nghẽn Rate Limit: Chờ 25s để Google xả giới hạn
             wait_time = 25 + (attempt * 10)
-            print(f"      [!] Vuot han muc Google (429). Tam nghi {wait_time}s roi chay tiep...")
+            print(f"      [!] Rate limit Google (429). Tam nghi {wait_time}s...")
             time.sleep(wait_time)
         elif res.status_code == 503:
-            wait_time = (attempt + 1) * 5
-            print(f"      [!] May chu ban (503). Thu lai sau {wait_time}s...")
-            time.sleep(wait_time)
+            time.sleep((attempt + 1) * 5)
         else:
             res.raise_for_status()
-    raise Exception("Khong the hoan tat sau cac luot retry.")
+    raise Exception("Loi ket noi Gemini API.")
 
 for feed_info in FEEDS:
     source_name = feed_info["source"]
@@ -87,21 +85,23 @@ for feed_info in FEEDS:
         description = entry.description if hasattr(entry, 'description') else entry.get('summary', '')
 
         if is_article_exists(original_url):
-            print(f"    [-] Da luu truoc do: {original_title[:45]}...")
+            print(f"    [-] Da co trong DB: {original_title[:45]}...")
             continue
 
         prompt = f"""
-        Ban la bien tap vien cong nghe AI. Hay doc noi dung va tom tat thanh ban tin tieng Viet chuan JSON:
-        Nguon: {source_name}
-        Tieu de: {original_title}
-        Mo ta: {description}
+        Ban la chuyen gia bien tap tap chi ve Suc khoe, Dinh duong va Am thuc doi song.
+        Hay phan tich bai bao sau va bien tap thanh ban tin tinh gon, thuc te theo dinh dang JSON:
 
-        Dinh dang JSON:
+        Nguon: {source_name}
+        Tieu de goc: {original_title}
+        Noi dung mo ta: {description}
+
+        Yeu cau JSON:
         {{
-          "title": "Tieu de tieng Viet ngan gon, hap dan",
-          "summary": "Tom tat tu 2 den 3 cau de hieu",
-          "tips": "Mot meo ung dung hoac nhan dinh thuc te",
-          "category": "Chon 1 trong: LLM, Coding, Business, Robot, Cong cu moi"
+          "title": "Tieu de giat tit hap dan, trang nha, danh dung tam ly nguoi doc",
+          "summary": "Tom tat tu 2-3 cau ve kien thuc y khoa, dinh duong hoac net doc dao am thuc",
+          "tips": "Loi khuyen suc khoe thuc chien, meo an uong, cong thuc che bien hoac luu y phong benh",
+          "category": "Chon 1 trong cac nhan: Dinh duong, Am thuc, Y hoc doi song, Meo suc khoe, Mon ngon"
         }}
         """
 
@@ -122,20 +122,19 @@ for feed_info in FEEDS:
                 "title": parsed_data.get("title", original_title),
                 "summary": parsed_data.get("summary", ""),
                 "tips": parsed_data.get("tips", ""),
-                "category": parsed_data.get("category", "Tin tức chung"),
+                "category": parsed_data.get("category", "Đời sống"),
                 "original_url": original_url
             }
 
             db_res = requests.post(SUPABASE_ENDPOINT, headers=SUPABASE_HEADERS, json=record)
             if db_res.status_code in [200, 201]:
-                print(f"    [+] Da luu: {record['title'][:50]}...")
+                print(f"    [+] Luu thanh cong: {record['title'][:50]}...")
             else:
                 print(f"    [x] Loi Supabase: {db_res.status_code}")
 
         except Exception as e:
             print(f"    [x] Bo qua bai do loi: {e}")
 
-        # Nghi 8 giay giua cac bai de an toan han muc
-        time.sleep(8)
+        time.sleep(6)
 
-print("\nHoan tat toan bo tien trinh!")
+print("\nHoan tat quet tin Am thuc & Suc khoe!")
