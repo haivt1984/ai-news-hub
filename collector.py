@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 sys.stdout.reconfigure(line_buffering=True)
 
 # ================= CẤU HÌNH THÔNG TIN =================
-RAW_SUPABASE = os.getenv("SUPABASE_URL", "https://lleeibzegmnycuingzgx.supabase.co")[cite: 1]
+RAW_SUPABASE = os.getenv("SUPABASE_URL", "https://lleeibzegmnycuingzgx.supabase.co")
 if "](" in RAW_SUPABASE:
     RAW_SUPABASE = RAW_SUPABASE.split("](")[-1].replace(")", "")
 RAW_SUPABASE = RAW_SUPABASE.strip("[]'\" \t\n\r")
@@ -23,7 +23,7 @@ else:
 SUPABASE_KEY = os.getenv(
     "SUPABASE_KEY",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZWVpYnplZ21ueWN1aW5nemd4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDEyNzk5NSwiZXhwIjoyMTA1NzAzOTk1fQ.HvOv3jwDbnc0mf89L8H2orG-g19Xg4AR7jMyXXTI_M8"
-).strip("[]'\" \t\n\r")[cite: 1]
+).strip("[]'\" \t\n\r")
 # ======================================================
 
 # Bổ sung nguồn cấp RSS chuyên biệt cho Món ngon / Cách nấu
