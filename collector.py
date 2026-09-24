@@ -26,7 +26,6 @@ SUPABASE_KEY = os.getenv(
 ).strip("[]'\" \t\n\r")
 # ======================================================
 
-# Nguồn cấp đa dạng: Món ngon mỗi ngày & Sức khỏe đời sống
 FEEDS = [
     # CHUYÊN MỤC CÔNG THỨC MÓN NGON MỖI NGÀY
     {"source": "VnExpress Ẩm Thực", "url": "https://vnexpress.net/rss/du-lich/am-thuc.rss", "cat": "Ẩm thực & Món ngon"},
@@ -39,7 +38,7 @@ FEEDS = [
     {"source": "VietnamNet Sức Khỏe", "url": "https://vietnamnet.vn/rss/suc-khoe.rss", "cat": "Dinh dưỡng"}
 ]
 
-ARTICLES_PER_FEED =20
+ARTICLES_PER_FEED = 100
 
 SUPABASE_ENDPOINT = f"{SUPABASE_URL}/rest/v1/articles"
 SUPABASE_HEADERS = {
@@ -175,6 +174,15 @@ for feed_info in FEEDS:
 
         print(f"    -> Đang nạp: {original_title[:45]}...")
 
+        # Lấy ngày xuất bản từ RSS
+        published_str = ""
+        if hasattr(entry, 'published'):
+            published_str = entry.published
+        elif hasattr(entry, 'pubDate'):
+            published_str = entry.pubDate
+        else:
+            published_str = time.strftime("%a, %d %b %Y %H:%M:%S +0700")
+
         full_content, image_url = scrape_article_data(original_url)
 
         title, summary, tips, category = generate_tips_and_summary(
@@ -188,7 +196,8 @@ for feed_info in FEEDS:
             "image_url": image_url,
             "tips": tips,
             "category": category,
-            "original_url": original_url
+            "original_url": original_url,
+            "published_at": published_str
         }
 
         try:
