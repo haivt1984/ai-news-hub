@@ -545,51 +545,43 @@
     let allArticles = [];
     let currentCategory = 'Tất cả';
 
-    function parseDateObj(dateStr) {
-      if (!dateStr) return new Date();
-      const d = new Date(dateStr);
-      return isNaN(d.getTime()) ? new Date() : d;
-    }
-
     function formatTimeDetail(dateStr) {
+      if (!dateStr) return "Mới cập nhật";
       try {
-        const d = parseDateObj(dateStr);
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return "Mới cập nhật";
         const hours = String(d.getHours()).padStart(2, '0');
         const mins = String(d.getMinutes()).padStart(2, '0');
         const day = String(d.getDate()).padStart(2, '0');
         const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-        return `${hours}:${mins} - ${day}/${month}/${year}`;
+        return `${hours}:${mins} - ${day}/${month}/${d.getFullYear()}`;
       } catch (e) {
-        return "Gần đây";
+        return "Mới cập nhật";
       }
     }
 
     function getDateHeading(dateStr) {
+      if (!dateStr) return "Tin Mới";
       try {
-        const d = parseDateObj(dateStr);
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return "Tin Mới";
         const now = new Date();
-        
-        const isToday = d.toDateString() === now.toDateString();
-        const yesterday = new Date();
-        yesterday.setDate(now.getDate() - 1);
-        const isYesterday = d.toDateString() === yesterday.toDateString();
-
-        const daysOfWeek = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
-        const dayName = daysOfWeek[d.getDay()] || "Ngày";
+        const days = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+        const dayName = days[d.getDay()] || "Ngày";
         const day = String(d.getDate()).padStart(2, '0');
         const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
 
-        if (isToday) return `Hôm nay (${dayName}, ${day}/${month}/${year})`;
-        if (isYesterday) return `Hôm qua (${dayName}, ${day}/${month}/${year})`;
-        return `${dayName}, Ngày ${day}/${month}/${year}`;
+        if (d.toDateString() === now.toDateString()) {
+          return `Hôm nay (${dayName}, ${day}/${month}/${d.getFullYear()})`;
+        }
+        return `${dayName}, Ngày ${day}/${month}/${d.getFullYear()}`;
       } catch (e) {
-        return "Tin tức mới cập nhật";
+        return "Tin Mới";
       }
     }
 
     async function loadData() {
+      const container = document.getElementById("groupedArticlesContainer");
       try {
         const res = await fetch(`${SUPABASE_URL}/rest/v1/articles?select=*&order=id.desc`, {
           headers: {
@@ -599,16 +591,17 @@
         });
 
         if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          throw new Error(errData.message || `Lỗi máy chủ: ${res.status}`);
+          const errBody = await res.text();
+          throw new Error(`Mã lỗi HTTP ${res.status}: ${errBody}`);
         }
 
         allArticles = await res.json();
+        console.log("Số lượng bài viết nhận được:", allArticles.length);
 
         if (!allArticles || allArticles.length === 0) {
-          document.getElementById("groupedArticlesContainer").innerHTML = `
+          container.innerHTML = `
             <div style="text-align: center; padding: 60px 0; color: var(--text-muted);">
-              Cơ sở dữ liệu hiện chưa có bài viết nào hoặc đang bị khóa quyền RLS.
+              Cơ sở dữ liệu chưa có bài viết nào hoặc đang bị khóa bảo mật RLS.
             </div>
           `;
           return;
@@ -623,10 +616,11 @@
           renderHomePage(allArticles);
         }
       } catch (err) {
-        document.getElementById("groupedArticlesContainer").innerHTML = `
-          <div style="text-align: center; padding: 40px; color: #ef4444;">
-            Không thể tải dữ liệu: ${err.message}.<br>
-            <em>(Vui lòng kiểm tra quyền RLS hoặc kết nối mạng)</em>
+        console.error("Lỗi nạp tin tức:", err);
+        container.innerHTML = `
+          <div style="text-align: center; padding: 40px; color: #dc2626;">
+            <strong>Không thể tải dữ liệu:</strong> ${escapeHtml(err.message)}<br>
+            <em style="font-size:0.85rem; color:#64748b;">(Vui lòng mở Console bằng F12 để xem chi tiết)</em>
           </div>
         `;
       }
@@ -638,18 +632,17 @@
 
       if (!articles || articles.length === 0) {
         heroContainer.innerHTML = "";
-        listContainer.innerHTML = `<div style="text-align: center; padding: 60px 0; color: var(--text-muted);">Không tìm thấy bài viết nào trong chuyên mục này.</div>`;
+        listContainer.innerHTML = `<div style="text-align: center; padding: 60px 0; color: var(--text-muted);">Không tìm thấy bài viết nào.</div>`;
         return;
       }
 
-      // 1. Cover Hero
       const [featured, ...others] = articles;
       const isCook = featured.category === "Ẩm thực & Món ngon";
       const fallbackImg = isCook 
         ? "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=80"
         : "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1200&q=80";
 
-      const featuredTime = featured.published_at || featured.created_at || new Date().toISOString();
+      const featuredTime = featured.published_at || featured.created_at;
 
       heroContainer.innerHTML = `
         <div class="hero-featured" onclick="showArticleDetail(${featured.id})">
@@ -675,10 +668,9 @@
         return;
       }
 
-      // 2. Gom nhóm theo ngày
       const groups = {};
       others.forEach(item => {
-        const timeField = item.published_at || item.created_at || new Date().toISOString();
+        const timeField = item.published_at || item.created_at;
         const heading = getDateHeading(timeField);
         if (!groups[heading]) groups[heading] = [];
         groups[heading].push(item);
@@ -688,7 +680,7 @@
       for (const [dateLabel, items] of Object.entries(groups)) {
         html += `
           <div class="date-timeline-heading">
-            <span class="date-badge">📅 ${dateLabel}</span>
+            <span class="date-badge">📅 ${escapeHtml(dateLabel)}</span>
             <div class="date-line"></div>
           </div>
           <div class="articles-grid">
@@ -697,7 +689,7 @@
               const itemFallback = itemCook
                 ? "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80"
                 : "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=800&q=80";
-              const itemTime = item.published_at || item.created_at || new Date().toISOString();
+              const itemTime = item.published_at || item.created_at;
 
               return `
                 <article class="card" onclick="showArticleDetail(${item.id})">
@@ -739,7 +731,7 @@
       if (!art) return;
 
       const isCook = art.category === "Ẩm thực & Món ngon";
-      const artTime = art.published_at || art.created_at || new Date().toISOString();
+      const artTime = art.published_at || art.created_at;
 
       document.getElementById("articleCategoryBadge").innerText = art.category || "Bài viết";
       document.getElementById("articleCategoryBadge").className = `tag-badge ${isCook ? 'cook' : ''}`;
