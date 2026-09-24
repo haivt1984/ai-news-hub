@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 sys.stdout.reconfigure(line_buffering=True)
 
 # ================= CẤU HÌNH THÔNG TIN =================
-RAW_SUPABASE = os.getenv("SUPABASE_URL", "https://lleeibzegmnycuingzgx.supabase.co")[cite: 1]
+RAW_SUPABASE = os.getenv("SUPABASE_URL", "https://lleeibzegmnycuingzgx.supabase.co")
 if "](" in RAW_SUPABASE:
     RAW_SUPABASE = RAW_SUPABASE.split("](")[-1].replace(")", "")
 RAW_SUPABASE = RAW_SUPABASE.strip("[]'\" \t\n\r")
@@ -23,7 +23,7 @@ else:
 SUPABASE_KEY = os.getenv(
     "SUPABASE_KEY",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZWVpYnplZ21ueWN1aW5nemd4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDEyNzk5NSwiZXhwIjoyMTA1NzAzOTk1fQ.HvOv3jwDbnc0mf89L8H2orG-g19Xg4AR7jMyXXTI_M8"
-).strip("[]'\" \t\n\r")[cite: 1]
+).strip("[]'\" \t\n\r")
 # ======================================================
 
 # Nguồn RSS tin tức sức khỏe tổng hợp
@@ -33,7 +33,7 @@ FEEDS = [
     {"source": "VietnamNet Sức Khỏe", "url": "https://vietnamnet.vn/rss/suc-khoe.rss", "cat": "Dinh dưỡng"}
 ]
 
-ARTICLES_PER_FEED = 3
+ARTICLES_PER_FEED = 20
 RECIPES_LIMIT = 5
 
 SUPABASE_ENDPOINT = f"{SUPABASE_URL}/rest/v1/articles"
@@ -110,7 +110,7 @@ def scrape_mon_ngon_detail(url):
     try:
         res = requests.get(url, headers=REQUEST_HEADERS, timeout=12)
         if res.status_code != 200:
-            return "", "", "", ""
+            return "", "", "", "", ""
 
         soup = BeautifulSoup(res.text, 'html.parser')
 
@@ -176,7 +176,6 @@ def harvest_mon_ngon_moi_ngay():
         recipe_links = []
         for a in soup.find_all('a', href=True):
             href = a['href']
-            # Đường dẫn bài viết món ăn thường có đuôi kết thúc dạng slug
             if "monngonmoingay.com/" in href and not any(x in href for x in ['/tag/', '/category/', '/video/', '/tac-gia/', '/lien-he/']):
                 if href != "https://monngonmoingay.com/" and href not in recipe_links and href.count('/') >= 4:
                     recipe_links.append(href)
