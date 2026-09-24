@@ -4,12 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- KHẮC PHỤC TRIỆT ĐỂ LỖI ẢNH CHỐNG HOTLINK TỪ DÂN TRÍ, VNEXPRESS, VIETNAMNET -->
+  <!-- KHẮC PHỤC TRIỆT ĐỂ LỖI ẢNH CHỐNG HOTLINK CỦA CÁC BÁO -->
   <meta name="referrer" content="no-referrer">
 
   <title>VibeLife - Tạp Chí Ẩm Thực & Sức Khỏe Gia Đình</title>
 
-  <!-- Google Fonts: Phông chữ hiện đại, sang trọng -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
@@ -31,7 +30,6 @@
       --radius-lg: 24px;
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
       --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.06), 0 8px 10px -6px rgba(0,0,0,0.04);
-      --shadow-lg: 0 20px 30px -10px rgba(0,0,0,0.1);
       --font-heading: 'Playfair Display', Georgia, serif;
       --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
     }
@@ -47,7 +45,6 @@
       min-height: 100vh;
     }
 
-    /* TOP STRIP */
     .top-strip {
       background: #0f172a;
       color: #94a3b8;
@@ -58,7 +55,6 @@
     }
     .top-strip span { color: #34d399; font-weight: 600; }
 
-    /* HEADER & NAV */
     header {
       background: #ffffff;
       border-bottom: 1px solid var(--border);
@@ -93,7 +89,6 @@
       justify-content: center;
       font-size: 1.4rem;
       color: #fff;
-      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3);
     }
     .brand-text h1 {
       font-family: var(--font-heading);
@@ -124,11 +119,8 @@
       padding: 6px 0;
       cursor: pointer;
       position: relative;
-      transition: color 0.2s;
     }
-    .nav-link:hover, .nav-link.active {
-      color: var(--primary-dark);
-    }
+    .nav-link:hover, .nav-link.active { color: var(--primary-dark); }
     .nav-link.active::after {
       content: "";
       position: absolute;
@@ -140,10 +132,7 @@
       border-radius: 2px;
     }
 
-    .nav-search {
-      position: relative;
-      width: 260px;
-    }
+    .nav-search { position: relative; width: 260px; }
     .nav-search input {
       width: 100%;
       padding: 9px 16px 9px 36px;
@@ -152,13 +141,10 @@
       background: #f1f5f9;
       font-size: 0.85rem;
       outline: none;
-      transition: all 0.2s ease;
-      font-family: inherit;
     }
     .nav-search input:focus {
       background: #fff;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
     }
     .nav-search-icon {
       position: absolute;
@@ -169,7 +155,6 @@
       color: var(--text-muted);
     }
 
-    /* MAIN CONTAINER */
     main {
       flex: 1;
       max-width: 1240px;
@@ -186,7 +171,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* COVER STORY / BÀI VIẾT TIÊU ĐIỂM */
+    /* COVER HERO */
     .hero-featured {
       display: grid;
       grid-template-columns: 1.3fr 1fr;
@@ -197,104 +182,79 @@
       margin-bottom: 40px;
       box-shadow: var(--shadow-sm);
       cursor: pointer;
-      transition: all 0.3s ease;
     }
-    .hero-featured:hover {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-3px);
-    }
-    .hero-img-box {
-      min-height: 380px;
-      background: #e2e8f0;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-img-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-    .hero-featured:hover .hero-img-box img {
-      transform: scale(1.04);
-    }
+    .hero-img-box { min-height: 380px; background: #e2e8f0; }
+    .hero-img-box img { width: 100%; height: 100%; object-fit: cover; }
     .hero-text-box {
       padding: 40px;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
+    .meta-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
     .tag-badge {
       display: inline-block;
-      align-self: flex-start;
       font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      padding: 5px 12px;
+      padding: 4px 10px;
       border-radius: 99px;
       background: var(--primary-light);
       color: var(--primary-dark);
-      margin-bottom: 14px;
     }
-    .tag-badge.cook {
-      background: var(--accent-light);
-      color: var(--accent);
+    .tag-badge.cook { background: var(--accent-light); color: var(--accent); }
+    .article-date {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
     }
     .hero-title {
       font-family: var(--font-heading);
       font-size: 2.1rem;
       font-weight: 800;
       line-height: 1.25;
-      color: var(--text-main);
       margin-bottom: 14px;
     }
     .hero-summary {
       color: var(--text-muted);
       font-size: 0.98rem;
-      line-height: 1.6;
       margin-bottom: 20px;
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-    .hero-meta {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--primary);
+
+    /* HEADING DÒNG THỜI GIAN THEO NGÀY */
+    .date-timeline-heading {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 15px;
+      margin: 40px 0 20px;
     }
-
-    /* TIÊU ĐỀ KHỐI */
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 24px;
-      border-bottom: 2px solid var(--border);
-      padding-bottom: 12px;
-    }
-    .section-title {
-      font-family: var(--font-heading);
-      font-size: 1.6rem;
+    .date-timeline-heading:first-of-type { margin-top: 10px; }
+    .date-badge {
+      background: #0f172a;
+      color: #fff;
+      font-size: 0.85rem;
       font-weight: 700;
-      color: var(--text-main);
-      position: relative;
+      padding: 6px 16px;
+      border-radius: 99px;
+      letter-spacing: 0.5px;
     }
-    .section-title::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: -14px;
-      width: 60px;
-      height: 3px;
-      background: var(--primary);
+    .date-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
     }
 
-    /* GRID THẺ BÀI VIẾT */
+    /* LƯỚI CARD */
     .articles-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -309,12 +269,11 @@
       flex-direction: column;
       box-shadow: var(--shadow-sm);
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.25s ease;
     }
     .card:hover {
       transform: translateY(-5px);
       box-shadow: var(--shadow-md);
-      border-color: #cbd5e1;
     }
     .card-thumb-wrap {
       width: 100%;
@@ -323,15 +282,7 @@
       position: relative;
       background: #e2e8f0;
     }
-    .card-thumb {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.4s ease;
-    }
-    .card:hover .card-thumb {
-      transform: scale(1.05);
-    }
+    .card-thumb { width: 100%; height: 100%; object-fit: cover; }
     .card-badge {
       position: absolute;
       top: 12px;
@@ -341,9 +292,8 @@
       color: var(--primary-dark);
       font-weight: 700;
       font-size: 0.72rem;
-      padding: 5px 10px;
+      padding: 4px 10px;
       border-radius: 99px;
-      text-transform: uppercase;
     }
     .card-badge.cook { color: var(--accent); }
     .card-body {
@@ -352,13 +302,20 @@
       flex-direction: column;
       flex-grow: 1;
     }
+    .card-time {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
     .card-title {
       font-family: var(--font-heading);
       font-size: 1.25rem;
       font-weight: 700;
       line-height: 1.35;
       margin-bottom: 10px;
-      color: var(--text-main);
     }
     .card-summary {
       font-size: 0.9rem;
@@ -389,7 +346,7 @@
       gap: 6px;
     }
 
-    /* MÀN HÌNH BÀI VIẾT ĐỘC LẬP (ARTICLE PAGE) */
+    /* VIEW TRANG ĐỌC BÀI */
     .article-page {
       background: #ffffff;
       border-radius: var(--radius-lg);
@@ -417,31 +374,20 @@
       border-radius: 99px;
       font-weight: 600;
       font-size: 0.85rem;
-      color: var(--text-main);
       cursor: pointer;
-      transition: all 0.2s;
     }
-    .back-btn:hover {
-      background: var(--primary-light);
-      color: var(--primary-dark);
-      border-color: var(--primary);
-    }
-    .article-hero-img {
-      width: 100%;
-      max-height: 480px;
-      object-fit: cover;
-      display: block;
-      background: #e2e8f0;
-    }
-    .article-content-container {
-      padding: 45px 55px;
+    .article-hero-img { width: 100%; max-height: 480px; object-fit: cover; }
+    .article-content-container { padding: 45px 55px; }
+    .article-publish-time {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
     }
     .article-headline {
       font-family: var(--font-heading);
-      font-size: 2.5rem;
+      font-size: 2.4rem;
       font-weight: 800;
       line-height: 1.25;
-      color: var(--text-main);
       margin-bottom: 20px;
     }
     .article-lead {
@@ -454,17 +400,12 @@
       border-bottom: 1px solid var(--border);
     }
     .article-tips-block {
-      background: linear-gradient(to right, var(--accent-light), #fff);
+      background: var(--accent-light);
       border-left: 5px solid var(--accent);
       padding: 18px 24px;
       border-radius: var(--radius-sm);
       margin-bottom: 35px;
       color: #7c2d12;
-    }
-    .article-tips-block h4 {
-      font-family: var(--font-heading);
-      font-size: 1.1rem;
-      margin-bottom: 4px;
     }
     .article-body {
       font-size: 1.1rem;
@@ -481,11 +422,10 @@
       padding-bottom: 8px;
     }
 
-    /* FOOTER */
     footer {
       background: #0f172a;
       color: #cbd5e1;
-      padding: 60px 0 30px;
+      padding: 50px 0 30px;
       margin-top: auto;
       border-top: 4px solid var(--primary);
     }
@@ -494,58 +434,13 @@
       margin: 0 auto;
       padding: 0 24px;
       display: grid;
-      grid-template-columns: 2fr 1fr 1.5fr;
+      grid-template-columns: 2fr 1fr;
       gap: 50px;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
-    .footer-col h3 {
-      font-family: var(--font-heading);
-      color: #fff;
-      font-size: 1.3rem;
-      margin-bottom: 16px;
-    }
-    .footer-col p {
-      font-size: 0.9rem;
-      line-height: 1.7;
-      color: #94a3b8;
-    }
-    .footer-links {
-      list-style: none;
-    }
-    .footer-links li { margin-bottom: 10px; }
-    .footer-links a {
-      color: #94a3b8;
-      text-decoration: none;
-      font-size: 0.9rem;
-      transition: color 0.2s;
-    }
-    .footer-links a:hover { color: #34d399; }
-    
-    .newsletter-box input {
-      width: 100%;
-      padding: 10px 14px;
-      border-radius: var(--radius-sm);
-      border: 1px solid #334155;
-      background: #1e293b;
-      color: #fff;
-      margin-bottom: 10px;
-      outline: none;
-    }
-    .newsletter-box button {
-      width: 100%;
-      padding: 10px;
-      border-radius: var(--radius-sm);
-      border: none;
-      background: var(--primary);
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .newsletter-box button:hover { background: var(--primary-dark); }
     .footer-bottom {
       text-align: center;
-      padding-top: 30px;
+      padding-top: 25px;
       border-top: 1px solid #1e293b;
       font-size: 0.8rem;
       color: #64748b;
@@ -553,22 +448,20 @@
 
     @media (max-width: 900px) {
       .hero-featured { grid-template-columns: 1fr; }
-      .hero-img-box { min-height: 250px; }
-      .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+      .hero-img-box { min-height: 240px; }
       .article-content-container { padding: 30px 20px; }
       .article-headline { font-size: 1.8rem; }
       .nav-menu { display: none; }
+      .footer-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- TOP BAR -->
   <div class="top-strip">
-    <span>CẬP NHẬT MỖI NGÀY</span> &bull; Cẩm nang ẩm thực, hướng dẫn nấu món ngon & y tế dinh dưỡng đời sống 2026
+    <span>BẢN TIN LIÊN TỤC</span> &bull; Cập nhật ngày, giờ và các công thức nấu ăn mới nhất năm 2026
   </div>
 
-  <!-- HEADER -->
   <header>
     <div class="nav-container">
       <div class="brand" onclick="navigateToHome()">
@@ -589,89 +482,60 @@
 
       <div class="nav-search">
         <span class="nav-search-icon">🔍</span>
-        <input type="text" id="searchInput" placeholder="Tìm kiếm món ăn, tin tức..." oninput="handleSearch()">
+        <input type="text" id="searchInput" placeholder="Tìm kiếm theo từ khóa..." oninput="handleSearch()">
       </div>
     </div>
   </header>
 
   <main>
-    <!-- VIEW 1: TRANG CHỦ & DANH SÁCH -->
     <section id="homeView" class="view-section active">
-      
       <div id="featuredHero"></div>
-
-      <div class="section-header">
-        <h2 id="currentSectionTitle" class="section-title">Tin Mới Cập Nhật</h2>
-      </div>
-
-      <div id="articlesGrid" class="articles-grid">
-        <div style="grid-column: 1/-1; text-align: center; padding: 60px 0; color: var(--text-muted);">
-          Đang nạp các món ăn và bài báo mới nhất...
+      
+      <!-- DANH SÁCH BÀI VIẾT ĐƯỢC CHIA THEO NGÀY THÁNG -->
+      <div id="groupedArticlesContainer">
+        <div style="text-align: center; padding: 60px 0; color: var(--text-muted);">
+          Đang nạp các bản tin và bài viết mới nhất...
         </div>
       </div>
-
     </section>
 
-    <!-- VIEW 2: TRANG ĐỌC BÀI VIẾT ĐỘC LẬP -->
     <section id="articleView" class="view-section">
       <article class="article-page">
-        
         <div class="article-top-nav">
-          <button class="back-btn" onclick="navigateToHome()">
-            &larr; Trở về Trang Chủ
-          </button>
+          <button class="back-btn" onclick="navigateToHome()">&larr; Trở về</button>
           <span id="articleCategoryBadge" class="tag-badge"></span>
         </div>
 
         <img id="detailImg" class="article-hero-img" alt="Ảnh minh họa">
 
         <div class="article-content-container">
+          <div id="detailTime" class="article-publish-time"></div>
           <h1 id="detailTitle" class="article-headline"></h1>
           <p id="detailSummary" class="article-lead"></p>
 
           <div id="detailTipsBlock" class="article-tips-block">
-            <h4 id="detailTipsTitle">💡 Lưu Ý Từ Chuyên Gia</h4>
+            <h4 id="detailTipsTitle">💡 Mẹo Từ Chuyên Gia</h4>
             <p id="detailTips"></p>
           </div>
 
           <div id="detailBody" class="article-body"></div>
         </div>
-
       </article>
     </section>
   </main>
 
-  <!-- FOOTER -->
   <footer>
     <div class="footer-grid">
-      <div class="footer-col">
-        <h3>Tạp Chí VibeLife</h3>
-        <p>Cổng thông tin chuyên biệt chia sẻ công thức món ngon gia đình mỗi ngày, kinh nghiệm dinh dưỡng và cập nhật kiến thức bảo vệ sức khỏe cộng đồng từ các nguồn y tế tin cậy.</p>
+      <div>
+        <h3 style="color:#fff; margin-bottom:10px;">Tạp Chí VibeLife</h3>
+        <p style="color:#94a3b8; font-size:0.9rem;">Cổng thông tin tổng hợp món ngon mỗi ngày và kiến thức y tế đời sống, phân loại rõ ràng theo dòng sự kiện và thời gian thực.</p>
       </div>
-
-      <div class="footer-col">
-        <h3>Chuyên Trang</h3>
-        <ul class="footer-links">
-          <li><a href="#" onclick="switchCategory('Ẩm thực & Món ngon')">Công Thức Nấu Ăn</a></li>
-          <li><a href="#" onclick="switchCategory('Dinh dưỡng')">Thực Đơn Dinh Dưỡng</a></li>
-          <li><a href="#" onclick="switchCategory('Y học đời sống')">Bản Tin Y Học</a></li>
-          <li><a href="#" onclick="switchCategory('Mẹo sống khỏe')">Thói Quen Sống Khỏe</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h3>Đăng Ký Nhận Bản Tin</h3>
-        <p style="margin-bottom: 14px;">Nhận thực đơn món ngon mỗi ngày và mẹo sức khỏe qua email hoàn toàn miễn phí.</p>
-        <div class="newsletter-box">
-          <input type="email" placeholder="Địa chỉ email của bạn...">
-          <button onclick="alert('Cảm ơn bạn đã đăng ký nhận bản tin VibeLife!')">Đăng Ký Ngay</button>
-        </div>
+      <div>
+        <h3 style="color:#fff; margin-bottom:10px;">Chuyên Mục Chính</h3>
+        <p style="color:#94a3b8; font-size:0.9rem;">Món Ngon Gia Đình &bull; Dinh Dưỡng Khoa Học &bull; Y Học Đời Sống</p>
       </div>
     </div>
-
-    <div class="footer-bottom">
-      &copy; 2026 VibeLife Magazine. All rights reserved. Bản quyền thuộc về VibeLife.
-    </div>
+    <div class="footer-bottom">&copy; 2026 VibeLife Magazine. All rights reserved.</div>
   </footer>
 
   <script>
@@ -680,6 +544,42 @@
 
     let allArticles = [];
     let currentCategory = 'Tất cả';
+
+    function parseDateObj(dateStr) {
+      if (!dateStr) return new Date();
+      const d = new Date(dateStr);
+      return isNaN(d.getTime()) ? new Date() : d;
+    }
+
+    function formatTimeDetail(dateStr) {
+      const d = parseDateObj(dateStr);
+      const hours = String(d.getHours()).padStart(2, '0');
+      const mins = String(d.getMinutes()).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      return `${hours}:${mins} - ${day}/${month}/${year}`;
+    }
+
+    function getDateHeading(dateStr) {
+      const d = parseDateObj(dateStr);
+      const now = new Date();
+      
+      const isToday = d.toDateString() === now.toDateString();
+      const yesterday = new Date();
+      yesterday.setDate(now.getDate() - 1);
+      const isYesterday = d.toDateString() === yesterday.toDateString();
+
+      const daysOfWeek = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+      const dayName = daysOfWeek[d.getDay()];
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+
+      if (isToday) return `Hôm nay (${dayName}, ${day}/${month}/${year})`;
+      if (isYesterday) return `Hôm qua (${dayName}, ${day}/${month}/${year})`;
+      return `${dayName}, Ngày ${day}/${month}/${year}`;
+    }
 
     async function loadData() {
       try {
@@ -701,9 +601,9 @@
           renderHomePage(allArticles);
         }
       } catch (err) {
-        document.getElementById("articlesGrid").innerHTML = `
-          <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #ef4444;">
-            Không thể kết nối đến máy chủ tin tức. Vui lòng kiểm tra lại kết nối mạng.
+        document.getElementById("groupedArticlesContainer").innerHTML = `
+          <div style="text-align: center; padding: 40px; color: #ef4444;">
+            Không thể kết nối đến máy chủ tin tức. Vui lòng thử lại sau.
           </div>
         `;
       }
@@ -711,14 +611,15 @@
 
     function renderHomePage(articles) {
       const heroContainer = document.getElementById("featuredHero");
-      const gridContainer = document.getElementById("articlesGrid");
+      const listContainer = document.getElementById("groupedArticlesContainer");
 
       if (!articles || articles.length === 0) {
         heroContainer.innerHTML = "";
-        gridContainer.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px 0; color: var(--text-muted);">Không tìm thấy bài viết hoặc món ăn nào trong chuyên mục này.</div>`;
+        listContainer.innerHTML = `<div style="text-align: center; padding: 60px 0; color: var(--text-muted);">Không tìm thấy bài viết nào trong chuyên mục này.</div>`;
         return;
       }
 
+      // 1. Bài mới nhất làm Cover Hero
       const [featured, ...others] = articles;
       const isCook = featured.category === "Ẩm thực & Món ngon";
       const fallbackImg = isCook 
@@ -731,45 +632,70 @@
             <img src="${featured.image_url || fallbackImg}" alt="${escapeHtml(featured.title)}">
           </div>
           <div class="hero-text-box">
-            <span class="tag-badge ${isCook ? 'cook' : ''}">${escapeHtml(featured.category || 'Tiêu Điểm')}</span>
+            <div class="meta-line">
+              <span class="tag-badge ${isCook ? 'cook' : ''}">${escapeHtml(featured.category || 'Tiêu Điểm')}</span>
+              <span class="article-date">🕒 ${formatTimeDetail(featured.published_at || featured.created_at)}</span>
+            </div>
             <h2 class="hero-title">${escapeHtml(featured.title)}</h2>
             <p class="hero-summary">${escapeHtml(featured.summary || '')}</p>
-            <div class="hero-meta">
-              <span>${isCook ? '🍲 Xem công thức & cách chế biến' : '📖 Khám phá chi tiết bài viết'}</span>
-              <span>&rarr;</span>
+            <div style="font-weight:700; color:var(--primary); font-size:0.9rem;">
+              ${isCook ? '🍲 Xem công thức & cách chế biến &rarr;' : '📖 Đọc toàn bộ bài viết &rarr;'}
             </div>
           </div>
         </div>
       `;
 
-      gridContainer.innerHTML = others.map(item => {
-        const itemCook = item.category === "Ẩm thực & Món ngon";
-        const thumb = item.image_url || (itemCook
-          ? "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80"
-          : "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=800&q=80");
+      // 2. Gom nhóm các bài còn lại theo Ngày / Tháng / Năm
+      const groups = {};
+      others.forEach(item => {
+        const heading = getDateHeading(item.published_at || item.created_at);
+        if (!groups[heading]) groups[heading] = [];
+        groups[heading].push(item);
+      });
 
-        return `
-          <article class="card" onclick="showArticleDetail(${item.id})">
-            <div class="card-thumb-wrap">
-              <span class="card-badge ${itemCook ? 'cook' : ''}">${escapeHtml(item.category || 'Bản Tin')}</span>
-              <img class="card-thumb" src="${thumb}" alt="${escapeHtml(item.title)}" loading="lazy">
-            </div>
-            <div class="card-body">
-              <h3 class="card-title">${escapeHtml(item.title)}</h3>
-              <p class="card-summary">${escapeHtml(item.summary || '')}</p>
-              ${item.tips ? `
-                <div class="card-tips">
-                  <strong>${itemCook ? 'Mẹo bếp:' : 'Mẹo sống khỏe:'}</strong> ${escapeHtml(item.tips)}
-                </div>
-              ` : ''}
-              <div class="card-link-act">
-                <span>${itemCook ? 'Xem các bước nấu' : 'Đọc trọn vẹn'}</span>
-                <span>&rarr;</span>
-              </div>
-            </div>
-          </article>
+      let html = "";
+      for (const [dateLabel, items] of Object.entries(groups)) {
+        html += `
+          <div class="date-timeline-heading">
+            <span class="date-badge">📅 ${dateLabel}</span>
+            <div class="date-line"></div>
+          </div>
+          <div class="articles-grid">
+            ${items.map(item => {
+              const itemCook = item.category === "Ẩm thực & Món ngon";
+              const thumb = item.image_url || (itemCook
+                ? "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80"
+                : "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=800&q=80");
+
+              return `
+                <article class="card" onclick="showArticleDetail(${item.id})">
+                  <div class="card-thumb-wrap">
+                    <span class="card-badge ${itemCook ? 'cook' : ''}">${escapeHtml(item.category || 'Bản Tin')}</span>
+                    <img class="card-thumb" src="${thumb}" alt="${escapeHtml(item.title)}" loading="lazy">
+                  </div>
+                  <div class="card-body">
+                    <div class="card-time">
+                      <span>🕒 ${formatTimeDetail(item.published_at || item.created_at)}</span>
+                    </div>
+                    <h3 class="card-title">${escapeHtml(item.title)}</h3>
+                    <p class="card-summary">${escapeHtml(item.summary \vert{}\vert{} '')}</p>${item.tips ? `
+                      <div class="card-tips">
+                        <strong>${itemCook ? 'Mẹo bếp:' : 'Lời khuyên:'}</strong> ${escapeHtml(item.tips)}
+                      </div>
+                    ` : ''}
+                    <div class="card-link-act">
+                      <span>${itemCook ? 'Xem các bước nấu' : 'Đọc trọn bài'}</span>
+                      <span>&rarr;</span>
+                    </div>
+                  </div>
+                </article>
+              `;
+            }).join('')}
+          </div>
         `;
-      }).join('');
+      }
+
+      listContainer.innerHTML = html;
     }
 
     function showArticleDetail(id, pushHistory = true) {
@@ -780,6 +706,7 @@
 
       document.getElementById("articleCategoryBadge").innerText = art.category || "Bài viết";
       document.getElementById("articleCategoryBadge").className = `tag-badge ${isCook ? 'cook' : ''}`;
+      document.getElementById("detailTime").innerText = `🕒 Xuất bản: ${formatTimeDetail(art.published_at || art.created_at)}`;
       document.getElementById("detailTitle").innerText = art.title;
       document.getElementById("detailSummary").innerText = art.summary || "";
 
@@ -794,7 +721,7 @@
       const tipsBox = document.getElementById("detailTipsBlock");
       if (art.tips) {
         tipsBox.style.display = "block";
-        document.getElementById("detailTipsTitle").innerText = isCook ? "🍳 Bí Quyết Nấu Ngon Từ Bếp Trưởng" : "💡 Lời Khuyên Chuyên Gia";
+        document.getElementById("detailTipsTitle").innerText = isCook ? "🍳 Bí Quyết Nấu Ngon" : "💡 Lời Khuyên Chuyên Gia";
         document.getElementById("detailTips").innerText = art.tips;
       } else {
         tipsBox.style.display = "none";
@@ -837,10 +764,6 @@
       document.querySelectorAll(".nav-link").forEach(btn => {
         btn.classList.toggle("active", btn.innerText === el?.innerText);
       });
-
-      document.getElementById("currentSectionTitle").innerText = 
-        cat === 'Tất cả' ? 'Tin Mới Cập Nhật' : `Chuyên Mục: ${cat}`;
-
       navigateToHome(false);
       applyFilter();
     }
@@ -865,10 +788,7 @@
 
     function escapeHtml(text) {
       if (!text) return "";
-      return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
     loadData();
