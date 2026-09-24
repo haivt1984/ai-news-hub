@@ -5,6 +5,7 @@ import time
 import feedparser
 import requests
 import sys
+from bs4 import BeautifulSoup
 
 sys.stdout.reconfigure(line_buffering=True)
 
@@ -19,6 +20,7 @@ if not RAW_SUPABASE.startswith("http"):
 else:
     SUPABASE_URL = RAW_SUPABASE
 
+# Sử dụng key service_role để bypass RLS và đảm bảo quyền ghi
 SUPABASE_KEY = os.getenv(
     "SUPABASE_KEY",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZWVpYnplZ21ueWN1aW5nemd4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDEyNzk5NSwiZXhwIjoyMTA1NzAzOTk1fQ.HvOv3jwDbnc0mf89L8H2orG-g19Xg4AR7jMyXXTI_M8"
@@ -65,6 +67,32 @@ def is_article_exists(url):
     except Exception as e:
         print(f"      [!] Lỗi kiểm tra trùng lặp: {e}")
     return False
+
+def scrape_full_content(url):
+    """Truy cập trực tiếp bài viết và bóc tách toàn bộ phần thân văn bản."""
+    try:
+        res = requests.get(url, headers=REQUEST_HEADERS, timeout=12)
+        if res.status_code != 200:
+            return ""
+        
+        soup = BeautifulSoup(res.text, 'html.parser')
+        
+        # Loại bỏ các thành phần rác, quảng cáo, script, liên kết ngoài
+        for tag in soup(['script', 'style', 'nav', 'header', 'footer', 'aside', 'form', 'iframe']):
+            tag.decompose()
+            
+        paragraphs = soup.find_all('p')
+        valid_texts = []
+        for p in paragraphs:
+            p_text = clean_html(p.get_text())
+            # Bỏ qua các đoạn quá ngắn như chú thích ảnh, author tag hoặc bản quyền
+            if len(p_text) > 40:
+                valid_texts.append(p_text)
+                
+        return "\n\n".join(valid_texts)
+    except Exception as e:
+        print(f"      [!] Không thể lấy nội dung chi tiết: {e}")
+        return ""
 
 def generate_tips_and_summary(title, desc, default_cat):
     title_clean = clean_html(title)
@@ -122,6 +150,9 @@ for feed_info in FEEDS:
 
         print(f"    -> Đang nạp: {original_title[:45]}...")
 
+        # Cào toàn bộ nội dung bài viết từ trang gốc
+        full_content = scrape_full_content(original_url)
+
         title, summary, tips, category = generate_tips_and_summary(
             original_title, description, feed_info["cat"]
         )
@@ -129,6 +160,7 @@ for feed_info in FEEDS:
         record = {
             "title": title,
             "summary": summary,
+            "content": full_content if full_content else summary,
             "tips": tips,
             "category": category,
             "original_url": original_url
@@ -137,7 +169,7 @@ for feed_info in FEEDS:
         try:
             db_res = requests.post(SUPABASE_ENDPOINT, headers=SUPABASE_HEADERS, json=record, timeout=10)
             if db_res.status_code in [200, 201]:
-                print(f"       ✔ Đã lưu thành công: [{category}]")
+                print(f"       ✔ Đã lưu thành công: [{category}] (Độ dài: {len(record['content'])} ký tự)")
             else:
                 print(f"       ✖ Lỗi Supabase: {db_res.status_code} - {db_res.text[:80]}")
         except Exception as e:
