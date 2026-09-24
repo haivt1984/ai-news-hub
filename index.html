@@ -7,6 +7,13 @@
   <!-- KHẮC PHỤC TRIỆT ĐỂ LỖI ẢNH CHỐNG HOTLINK TỪ DÂN TRÍ, VNEXPRESS, VIETNAMNET -->
   <meta name="referrer" content="no-referrer">
 
+  <!-- CẤU HÌNH BIẾN WEB THÀNH APP IOS NATIVE (PWA) -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="VibeLife">
+  <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=192&q=80">
+
   <title>VibeLife - Tạp Chí Ẩm Thực & Sức Khỏe Gia Đình</title>
 
   <!-- Google Fonts: Phông chữ hiện đại, sang trọng -->
@@ -708,7 +715,7 @@
     let allArticles = [];
     let currentCategory = 'Tất cả';
 
-    // Hàm chuyển đổi và hiển thị ngày giờ chuẩn xác
+    // Chuyển đổi và hiển thị ngày giờ chuẩn xác
     function formatTimeDetail(dateStr) {
       if (!dateStr) return "Mới cập nhật";
       try {
@@ -734,7 +741,7 @@
         });
         if (!res.ok) throw new Error("Lỗi nạp tin tức");
         allArticles = await res.json();
-        
+
         const urlParams = new URLSearchParams(window.location.search);
         const articleId = urlParams.get('id');
 
@@ -764,7 +771,7 @@
 
       const [featured, ...others] = articles;
       const isCook = featured.category === "Ẩm thực & Món ngon";
-      const fallbackImg = isCook 
+      const fallbackImg = isCook
         ? "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=80"
         : "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1200&q=80";
 
@@ -893,7 +900,7 @@
         btn.classList.toggle("active", btn.innerText === el?.innerText);
       });
 
-      document.getElementById("currentSectionTitle").innerText = 
+      document.getElementById("currentSectionTitle").innerText =
         cat === 'Tất cả' ? 'Tin Mới Cập Nhật' : `Chuyên Mục: ${cat}`;
 
       navigateToHome(false);
@@ -910,7 +917,7 @@
 
       const filtered = allArticles.filter(item => {
         const matchCat = (currentCategory === 'Tất cả') || (item.category === currentCategory);
-        const matchQuery = item.title.toLowerCase().includes(q) || 
+        const matchQuery = item.title.toLowerCase().includes(q) ||
                            (item.summary && item.summary.toLowerCase().includes(q));
         return matchCat && matchQuery;
       });
@@ -921,7 +928,14 @@
     function escapeHtml(text) {
       if (!text) return "";
       return text
-        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    // Đăng ký Service Worker cho PWA
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
     }
 
     loadData();
