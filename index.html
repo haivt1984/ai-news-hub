@@ -3,25 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Đời Sống & Sức Khỏe - Nhật Báo Cổ Điển</title>
+  <title>VibeLife - Tạp Chí Sống Khỏe & Dinh Dưỡng Hiện Đại</title>
 
-  <!-- Google Fonts: Phông chữ Gothic cho Tiêu Đề Báo & Phông Chân Cổ Điển -->
+  <!-- Google Fonts: Phông chữ Inter & Outfit hiện đại -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Cinzel:wght@600;800&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-paper: #f4ecd8;
-      --bg-paper-light: #faf5e8;
-      --ink: #1f1b18;
-      --ink-muted: #574f47;
-      --border-dark: #2c2521;
-      --accent-vintage: #8c2d19;
-      --font-masthead: 'UnifrakturMaguntia', 'Cinzel', serif;
-      --font-headline: 'Playfair Display', Georgia, serif;
-      --font-body: 'Merriweather', serif;
-      --font-sub: 'Cinzel', serif;
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --primary-light: #ecfdf5;
+      --accent: #f97316;
+      --accent-light: #fff7ed;
+      --text-main: #0f172a;
+      --text-sub: #475569;
+      --bg-body: #f8fafc;
+      --bg-card: #ffffff;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 20px 30px -10px rgba(0, 0, 0, 0.15);
+      --font-heading: 'Outfit', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
     }
 
     * {
@@ -31,256 +36,276 @@
     }
 
     body {
-      background-color: var(--bg-paper);
-      color: var(--ink);
+      background-color: var(--bg-body);
+      color: var(--text-main);
       font-family: var(--font-body);
       line-height: 1.6;
-      background-image: radial-gradient(#dfd4be 10%, transparent 10%);
-      background-size: 16px 16px;
-      padding-bottom: 80px;
     }
 
-    .paper-sheet {
-      max-width: 1240px;
-      margin: 30px auto;
-      background: var(--bg-paper-light);
-      padding: 30px 45px;
-      border: 1px solid #d4c5a9;
-      box-shadow: 0 10px 30px rgba(44, 37, 33, 0.15), 0 0 150px rgba(0, 0, 0, 0.05) inset;
-      position: relative;
+    /* THANH ĐIỀU HƯỚNG TRÊN CÙNG */
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+      background-color: rgba(255, 255, 255, 0.95);
     }
 
-    /* ĐƯỜNG VIỀN KÉP ĐẶC TRƯNG BÁO GIẤY */
-    .paper-sheet::before {
-      content: "";
-      position: absolute;
-      inset: 8px;
-      border: 2px solid var(--border-dark);
-      pointer-events: none;
-    }
-
-    /* TOP BAR: THÔNG TIN SỐ BÁO / NGÀY THÁNG */
-    .newspaper-meta-bar {
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 2px solid var(--border-dark);
-      padding-bottom: 6px;
-      font-family: var(--font-sub);
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--ink-muted);
-    }
-
-    /* TIÊU ĐỀ TRANG BÁO (MASTHEAD) */
-    .masthead {
-      text-align: center;
-      padding: 20px 0 12px;
-      border-bottom: 5px double var(--border-dark);
-    }
-
-    .masthead-title {
-      font-family: var(--font-masthead);
-      font-size: 4.6rem;
-      font-weight: 400;
-      line-height: 1;
-      letter-spacing: 2px;
-      color: var(--border-dark);
-      text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
-    }
-
-    .masthead-motto {
-      font-family: var(--font-headline);
-      font-style: italic;
-      font-size: 1.05rem;
-      margin-top: 8px;
-      color: var(--ink-muted);
-    }
-
-    /* THANH ĐIỀU HƯỚNG VÀ DANH MỤC */
-    .newspaper-nav {
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 2px solid var(--border-dark);
-      padding: 10px 0;
-      margin-bottom: 25px;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .categories-list {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-
-    .cat-btn {
-      background: none;
-      border: none;
-      font-family: var(--font-sub);
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      font-weight: 800;
-      letter-spacing: 1px;
-      cursor: pointer;
-      color: var(--ink);
-      padding: 4px 6px;
-      position: relative;
-    }
-
-    .cat-btn::after {
-      content: "";
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0%;
-      height: 2px;
-      background: var(--accent-vintage);
-      transition: width 0.2s ease;
-    }
-
-    .cat-btn:hover::after, .cat-btn.active::after {
-      width: 100%;
-    }
-
-    .cat-btn.active {
-      color: var(--accent-vintage);
-    }
-
-    /* Ô TÌM KIẾM CỔ ĐIỂN */
-    .search-container input {
-      background: transparent;
-      border: 1px solid var(--border-dark);
-      padding: 6px 14px;
-      font-family: var(--font-body);
-      font-size: 0.85rem;
-      color: var(--ink);
-      outline: none;
-      border-radius: 0;
-    }
-
-    .search-container input::placeholder {
-      font-style: italic;
-      color: #8b8072;
-    }
-
-    /* BỐ CỤC LƯỚI TIN BÁO IN */
-    .newspaper-grid {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 25px;
-    }
-
-    /* TIN NỔI BẬT (HEADLINE CHIẾM 8 CỘT) */
-    .article-headline {
-      grid-column: span 8;
-      border-right: 1px solid #d4c5a9;
-      padding-right: 25px;
-      display: flex;
-      flex-direction: column;
-      cursor: pointer;
-    }
-
-    .article-headline .article-title {
-      font-size: 2.2rem;
-      line-height: 1.2;
-      margin: 10px 0 15px;
-    }
-
-    .article-headline .article-summary {
-      column-count: 2;
-      column-gap: 24px;
-      text-align: justify;
-    }
-
-    /* CỘT PHỤ (CHIẾM 4 CỘT) */
-    .headline-sidebar {
-      grid-column: span 4;
-      display: flex;
-      flex-direction: column;
       gap: 20px;
     }
 
-    /* DÒNG BÀI VIẾT BÌNH THƯỜNG (4 CỘT) */
-    .article-card {
-      grid-column: span 4;
-      border-top: 1px solid var(--border-dark);
-      padding-top: 14px;
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), #06b6d4);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.3rem;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.1;
+    }
+
+    .brand-text span {
+      font-size: 0.75rem;
+      color: var(--primary-dark);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .search-box {
+      position: relative;
+      width: 320px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px 18px;
+      border-radius: 99px;
+      border: 1px solid var(--border-color);
+      background-color: #f1f5f9;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.25s ease;
+      font-family: var(--font-body);
+    }
+
+    .search-box input:focus {
+      background-color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+    }
+
+    /* CONTAINER CHÍNH */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* BANNER TƯƠI MÁT */
+    .hero-banner {
+      background: linear-gradient(135deg, #059669, #0d9488, #0284c7);
+      border-radius: 24px;
+      padding: 40px;
+      margin: 28px 0;
+      color: #ffffff;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner h2 {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .hero-banner p {
+      font-size: 1.05rem;
+      opacity: 0.95;
+      max-width: 650px;
+    }
+
+    /* THANH LỌC CHUYÊN MỤC */
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .filter-btn {
+      padding: 10px 20px;
+      border-radius: 99px;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      color: var(--text-sub);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary-dark);
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    /* LƯỚI TIN TỨC HIỆN ĐẠI */
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 28px;
+      margin-bottom: 60px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 18px;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       cursor: pointer;
     }
 
-    .article-category-tag {
-      font-family: var(--font-sub);
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      font-weight: 800;
-      color: var(--accent-vintage);
-      letter-spacing: 1px;
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+      border-color: #cbd5e1;
     }
 
-    .article-title {
-      font-family: var(--font-headline);
+    .card-thumb-wrap {
+      width: 100%;
+      height: 210px;
+      overflow: hidden;
+      background: #e2e8f0;
+      position: relative;
+    }
+
+    .card-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .card:hover .card-thumb {
+      transform: scale(1.05);
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(4px);
+      color: var(--primary-dark);
       font-weight: 700;
-      color: var(--ink);
-      margin: 6px 0 10px;
-      transition: color 0.15s ease;
+      font-size: 0.75rem;
+      padding: 6px 12px;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: var(--shadow-sm);
     }
 
-    .article-title:hover {
-      color: var(--accent-vintage);
-    }
-
-    .article-card .article-title {
-      font-size: 1.25rem;
-      line-height: 1.35;
-    }
-
-    .article-summary {
-      font-size: 0.85rem;
-      line-height: 1.55;
-      color: var(--ink-muted);
-      text-align: justify;
+    .card-content {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
       flex-grow: 1;
     }
 
-    /* HIỆU ỨNG CHỮ HOA ĐẦU ĐOẠN (DROP CAP) */
-    .drop-cap::first-letter {
-      font-family: var(--font-headline);
-      font-size: 3.2rem;
-      float: left;
-      line-height: 0.8;
-      padding-right: 8px;
-      padding-top: 4px;
-      color: var(--border-dark);
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
       font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.35;
+      margin-bottom: 10px;
     }
 
-    /* HỘP MẸO DÂN GIAN & SỨC KHỎE */
-    .vintage-advice-box {
-      border: 1px dashed var(--border-dark);
-      background: #f1e7d0;
-      padding: 10px 12px;
-      margin-top: 12px;
-      font-size: 0.8rem;
-      font-style: italic;
+    .card-summary {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+      margin-bottom: 16px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      flex-grow: 1;
     }
 
-    .vintage-advice-box strong {
-      font-family: var(--font-sub);
-      font-style: normal;
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      color: var(--accent-vintage);
+    .card-advice {
+      background: var(--accent-light);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 0.82rem;
+      color: #9a3412;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
     }
 
-    /* MODAL ĐỌC BÁO PHÓNG SỰ (POPUP) */
-    .vintage-modal-overlay {
+    .card-action {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--primary-dark);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    /* CỬA SỔ XEM BÀI VIẾT TRỌN VẸN (MODAL) */
+    .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(30, 24, 20, 0.75);
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(6px);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -291,143 +316,168 @@
       padding: 20px;
     }
 
-    .vintage-modal-overlay.active {
+    .modal-backdrop.show {
       opacity: 1;
       pointer-events: auto;
     }
 
-    .vintage-modal-paper {
-      background: var(--bg-paper-light);
-      max-width: 880px;
+    .modal-dialog {
+      background: #ffffff;
       width: 100%;
+      max-width: 820px;
       max-height: 90vh;
+      border-radius: 24px;
       overflow-y: auto;
-      border: 3px solid var(--border-dark);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-      padding: 40px 50px;
+      box-shadow: var(--shadow-lg);
       position: relative;
     }
 
-    .modal-close-btn {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      background: none;
-      border: 1px solid var(--border-dark);
-      font-size: 1.2rem;
-      width: 32px;
-      height: 32px;
+    .modal-close-icon {
+      position: sticky;
+      top: 16px;
+      right: 16px;
+      float: right;
+      width: 38px;
+      height: 38px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(4px);
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      font-size: 1.4rem;
       cursor: pointer;
-      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-sub);
+      transition: all 0.2s ease;
+      z-index: 10;
     }
 
-    .modal-header-meta {
-      font-family: var(--font-sub);
+    .modal-close-icon:hover {
+      background: #f1f5f9;
+      color: #000;
+    }
+
+    .modal-cover {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      display: none;
+    }
+
+    .modal-inner {
+      padding: 36px 40px;
+    }
+
+    .modal-tag {
+      display: inline-block;
       font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--accent-vintage);
-      border-bottom: 1px solid var(--border-dark);
-      padding-bottom: 8px;
-      margin-bottom: 15px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      background: var(--primary-light);
+      padding: 6px 14px;
+      border-radius: 99px;
+      margin-bottom: 14px;
     }
 
-    .modal-article-title {
-      font-family: var(--font-headline);
-      font-size: 2.3rem;
-      line-height: 1.25;
+    .modal-heading {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1.3;
       margin-bottom: 20px;
-      text-align: center;
+      color: var(--text-main);
     }
 
-    .modal-advice {
-      border: 1px solid var(--border-dark);
-      border-left: 5px solid var(--accent-vintage);
-      padding: 14px 18px;
-      background: #eee3c8;
-      font-size: 0.9rem;
-      margin-bottom: 25px;
-      font-style: italic;
+    .modal-tips-card {
+      background: var(--accent-light);
+      border-left: 4px solid var(--accent);
+      padding: 16px 20px;
+      border-radius: 0 14px 14px 0;
+      color: #9a3412;
+      font-size: 0.95rem;
+      margin-bottom: 26px;
     }
 
-    .modal-article-content {
-      font-family: var(--font-body);
-      font-size: 1rem;
+    .modal-body-text {
+      font-size: 1.05rem;
       line-height: 1.8;
-      text-align: justify;
+      color: #334155;
       white-space: pre-line;
-      column-count: 2;
-      column-gap: 35px;
     }
 
-    .empty-announcement {
-      grid-column: span 12;
+    .empty-prompt {
       text-align: center;
-      padding: 50px;
-      font-style: italic;
-      color: var(--ink-muted);
+      padding: 80px 0;
+      color: var(--text-sub);
+      grid-column: 1 / -1;
     }
 
-    /* ĐIỀU CHỈNH TRÊN THIẾT BỊ DI ĐỘNG */
-    @media (max-width: 900px) {
-      .paper-sheet { padding: 20px 20px; }
-      .masthead-title { font-size: 2.8rem; }
-      .article-headline { grid-column: span 12; border-right: none; padding-right: 0; }
-      .article-headline .article-summary { column-count: 1; }
-      .headline-sidebar { grid-column: span 12; }
-      .article-card { grid-column: span 12; }
-      .modal-article-content { column-count: 1; }
-      .vintage-modal-paper { padding: 25px 20px; }
+    @media (max-width: 768px) {
+      .header-container { flex-direction: column; align-items: stretch; }
+      .search-box { width: 100%; }
+      .hero-banner { padding: 26px; border-radius: 18px; }
+      .hero-banner h2 { font-size: 1.6rem; }
+      .articles-grid { grid-template-columns: 1fr; }
+      .modal-inner { padding: 24px; }
+      .modal-heading { font-size: 1.45rem; }
     }
   </style>
 </head>
 <body>
 
-  <div class="paper-sheet">
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <a href="#" class="brand-logo">
+        <div class="brand-icon">🌿</div>
+        <div class="brand-text">
+          <h1>VibeLife</h1>
+          <span>SỨC KHỎE & ẨM THỰC</span>
+        </div>
+      </a>
+
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Tìm kiếm bài viết, món ngon..." oninput="handleSearch()">
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
     
-    <!-- THANH THỜI GIAN VÀ ẤN PHẨM -->
-    <div class="newspaper-meta-bar">
-      <span>ẤN BẢN ĐẶC BIỆT NĂM 2026</span>
-      <span id="currentDateStr">HÀ NỘI - SÀI GÒN</span>
-      <span>GIÁ: 200 ĐỒNG</span>
+    <!-- BANNER CHÀO MỪNG TƯƠI MÁT -->
+    <div class="hero-banner">
+      <h2>Khám phá Lối Sống Khỏe Mỗi Ngày</h2>
+      <p>Cập nhật những nghiên cứu dinh dưỡng mới nhất, bí quyết nấu ăn bổ dưỡng và lời khuyên sống khỏe từ các chuyên gia.</p>
     </div>
 
-    <!-- TỰA ĐỀ NHẬT BÁO -->
-    <header class="masthead">
-      <h1 class="masthead-title">Nhật Báo Sức Khỏe</h1>
-      <p class="masthead-motto">"Thức Ăn Là Vị Thuốc - Nếp Sống Là Cội Nguồn Bình An"</p>
-    </header>
+    <!-- THANH LỌC CHUYÊN MỤC -->
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="setCategory('Tất cả')">✨ Tất cả bài viết</button>
+      <button class="filter-btn" onclick="setCategory('Y học đời sống')">🩺 Y học đời sống</button>
+      <button class="filter-btn" onclick="setCategory('Dinh dưỡng')">🥑 Dinh dưỡng</button>
+      <button class="filter-btn" onclick="setCategory('Mẹo sống khỏe')">🏃 Mẹo sống khỏe</button>
+      <button class="filter-btn" onclick="setCategory('Ẩm thực & Món ngon')">🍲 Ẩm thực bốn phương</button>
+    </div>
 
-    <!-- THANH ĐIỀU HƯỚNG BÁO CHÍ & TÌM KIẾM -->
-    <nav class="newspaper-nav">
-      <div class="categories-list">
-        <button class="cat-btn active" onclick="setCategory('Tất cả')">Toàn Bộ Tin</button>
-        <button class="cat-btn" onclick="setCategory('Y học đời sống')">Y Học Đời Sống</button>
-        <button class="cat-btn" onclick="setCategory('Dinh dưỡng')">Dinh Dưỡng</button>
-        <button class="cat-btn" onclick="setCategory('Mẹo sống khỏe')">Mẹo Sống Khỏe</button>
-        <button class="cat-btn" onclick="setCategory('Ẩm thực & Món ngon')">Ẩm Thực Bốn Phương</button>
+    <!-- LƯỚI BÀI VIẾT -->
+    <div id="articlesContainer" class="articles-grid">
+      <div class="empty-prompt">Đang làm mới dữ liệu bài viết...</div>
+    </div>
+
+  </main>
+
+  <!-- MODAL XEM CHI TIẾT BÀI BÁO -->
+  <div id="articleModal" class="modal-backdrop" onclick="onOverlayClick(event)">
+    <div class="modal-dialog">
+      <button class="modal-close-icon" onclick="closeModal()">&times;</button>
+      <img id="modalImg" class="modal-cover" alt="Ảnh minh họa bài viết">
+      <div class="modal-inner">
+        <span id="modalCategory" class="modal-tag"></span>
+        <h2 id="modalHeading" class="modal-heading"></h2>
+        <div id="modalTipsBox" class="modal-tips-card"></div>
+        <div id="modalBodyText" class="modal-body-text"></div>
       </div>
-
-      <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Tra cứu bài viết..." oninput="onSearch()">
-      </div>
-    </nav>
-
-    <!-- KHU VỰC CÁC CỘT TIN TỨC -->
-    <main id="newsLayout" class="newspaper-grid">
-      <div class="empty-announcement">Đang chuẩn bị bản in từ các tòa soạn...</div>
-    </main>
-
-  </div>
-
-  <!-- POPUP ĐỌC PHÓNG SỰ / BÀI BÁO TOÀN VĂN -->
-  <div id="readModal" class="vintage-modal-overlay" onclick="closeModalOnOverlay(event)">
-    <div class="vintage-modal-paper">
-      <button class="modal-close-btn" onclick="closeModal()">&times;</button>
-      <div id="modalCategory" class="modal-header-meta"></div>
-      <h2 id="modalTitle" class="modal-article-title"></h2>
-      <div id="modalAdvice" class="modal-advice"></div>
-      <div id="modalContent" class="modal-article-content"></div>
     </div>
   </div>
 
@@ -435,19 +485,10 @@
     const SUPABASE_URL = "https://lleeibzegmnycuingzgx.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZWVpYnplZ21ueWN1aW5nemd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxMjc5OTUsImV4cCI6MjEwNTcwMzk5NX0.KrO8Y8qoKh0NIPYDL6wki7zGb-Lxi1xwWgQrX9xSXxE";
 
-    let articlesData = [];
+    let articlesList = [];
     let currentCategory = 'Tất cả';
 
-    // In ngày tháng hiện tại theo phong cách báo chí cổ
-    function displayDate() {
-      const now = new Date();
-      const days = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
-      const str = `${days[now.getDay()]}, Ngày ${now.getDate()} Tháng ${now.getMonth() + 1} Năm ${now.getFullYear()}`;
-      document.getElementById("currentDateStr").innerText = str.toUpperCase();
-    }
-    displayDate();
-
-    async function loadNewspaper() {
+    async function fetchNews() {
       try {
         const res = await fetch(`${SUPABASE_URL}/rest/v1/articles?select=*&order=id.desc`, {
           headers: {
@@ -455,124 +496,112 @@
             "Authorization": `Bearer ${SUPABASE_KEY}`
           }
         });
-        if (!res.ok) throw new Error("Lỗi nạp dữ liệu");
-        articlesData = await res.json();
-        renderLayout(articlesData);
-      } catch (e) {
-        document.getElementById("newsLayout").innerHTML = `
-          <div class="empty-announcement">Tạm thời gián đoạn liên lạc với tòa soạn. Xin quý độc giả trở lại sau.</div>
+        if (!res.ok) throw new Error("Lỗi nạp tin");
+        articlesList = await res.json();
+        renderCards(articlesList);
+      } catch (err) {
+        document.getElementById("articlesContainer").innerHTML = `
+          <div class="empty-prompt">Không thể tải dữ liệu vào lúc này. Vui lòng kiểm tra lại kết nối mạng.</div>
         `;
       }
     }
 
-    function renderLayout(articles) {
-      const layout = document.getElementById("newsLayout");
+    function renderCards(articles) {
+      const container = document.getElementById("articlesContainer");
 
       if (!articles || articles.length === 0) {
-        layout.innerHTML = `<div class="empty-announcement">Không tìm thấy bài báo nào trong số này.</div>`;
+        container.innerHTML = `<div class="empty-prompt">Không có bài viết nào phù hợp với tìm kiếm của bạn.</div>`;
         return;
       }
 
-      // 1. Phân chia: Bài đầu tiên làm Headline lớn, 2 bài tiếp làm sidebar, còn lại dàn lưới
-      const [headline, sub1, sub2, ...rest] = articles;
-
-      let html = "";
-
-      // Khối Tin Đinh (Headline chính của số báo)
-      if (headline) {
-        html += `
-          <article class="article-headline" onclick="openArticleModal(${headline.id})">
-            <span class="article-category-tag">${escapeStr(headline.category || 'Tiêu Điểm')}</span>
-            <h2 class="article-title">${escapeStr(headline.title)}</h2>
-            <div class="article-summary drop-cap">${escapeStr(headline.summary || '')}</div>
-            ${headline.tips ? `<div class="vintage-advice-box"><strong>Mẹo hay đời sống:</strong> ${escapeStr(headline.tips)}</div>` : ''}
-          </article>
-        `;
-      }
-
-      // Cột phụ bên phải headline
-      if (sub1 || sub2) {
-        html += `<div class="headline-sidebar">`;
-        [sub1, sub2].filter(Boolean).forEach(item => {
-          html += `
-            <div class="article-card" style="border-top: none; border-bottom: 1px solid var(--border-dark); padding-bottom: 14px;" onclick="openArticleModal(${item.id})">
-              <span class="article-category-tag">${escapeStr(item.category || 'Ghi Nhận')}</span>
-              <h3 class="article-title" style="font-size: 1.15rem;">${escapeStr(item.title)}</h3>
-              <p class="article-summary">${escapeStr(item.summary || '')}</p>
+      container.innerHTML = articles.map(item => `
+        <article class="card" onclick="openModal(${item.id})">
+          <div class="card-thumb-wrap">
+            <span class="card-badge">${escapeStr(item.category || 'Sống khỏe')}</span>
+            <img class="card-thumb" 
+                 src="${item.image_url || 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=800&q=80'}" 
+                 alt="${escapeStr(item.title)}" 
+                 loading="lazy">
+          </div>
+          <div class="card-content">
+            <h3 class="card-title">${escapeStr(item.title)}</h3>
+            <p class="card-summary">${escapeStr(item.summary || '')}</p>
+            ${item.tips ? `
+              <div class="card-advice">
+                <span>💡</span>
+                <div>${escapeStr(item.tips)}</div>
+              </div>
+            ` : ''}
+            <div class="card-action">
+              <span>Đọc toàn bộ bài viết</span>
+              <span>&rarr;</span>
             </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // Các bài viết tiếp theo dàn theo cột báo truyền thống
-      rest.forEach(item => {
-        html += `
-          <article class="article-card" onclick="openArticleModal(${item.id})">
-            <span class="article-category-tag">${escapeStr(item.category || 'Tin Vắn')}</span>
-            <h3 class="article-title">${escapeStr(item.title)}</h3>
-            <p class="article-summary">${escapeStr(item.summary || '')}</p>
-            ${item.tips ? `<div class="vintage-advice-box"><strong>Lời khuyên:</strong> ${escapeStr(item.tips)}</div>` : ''}
-          </article>
-        `;
-      });
-
-      layout.innerHTML = html;
+          </div>
+        </article>
+      `).join('');
     }
 
-    function openArticleModal(id) {
-      const art = articlesData.find(a => a.id === id);
+    function openModal(id) {
+      const art = articlesList.find(a => a.id === id);
       if (!art) return;
 
-      document.getElementById("modalCategory").innerText = `CHUYÊN MỤC: ${art.category || 'THỜI SỰ Y TẾ'}`;
-      document.getElementById("modalTitle").innerText = art.title;
-
-      const advBox = document.getElementById("modalAdvice");
-      if (art.tips) {
-        advBox.style.display = "block";
-        advBox.innerHTML = `<strong>LƯU Ý CỦA TÒA SOẠN:</strong> ${escapeStr(art.tips)}`;
+      const imgEl = document.getElementById("modalImg");
+      if (art.image_url) {
+        imgEl.style.display = "block";
+        imgEl.src = art.image_url;
       } else {
-        advBox.style.display = "none";
+        imgEl.style.display = "none";
       }
 
-      // Hiển thị nội dung đầy đủ đã cào, nếu chưa có thì dùng summary
-      const contentEl = document.getElementById("modalContent");
-      contentEl.innerText = art.content || art.summary;
-      contentEl.className = "modal-article-content drop-cap";
+      document.getElementById("modalCategory").innerText = art.category || "Tin đời sống";
+      document.getElementById("modalHeading").innerText = art.title;
 
-      document.getElementById("readModal").classList.add("active");
+      const tipsBox = document.getElementById("modalTipsBox");
+      if (art.tips) {
+        tipsBox.style.display = "block";
+        tipsBox.innerHTML = `<strong>Lời khuyên chuyên gia:</strong><br>${escapeStr(art.tips)}`;
+      } else {
+        tipsBox.style.display = "none";
+      }
+
+      document.getElementById("modalBodyText").innerText = art.content || art.summary;
+
+      document.getElementById("articleModal").classList.add("show");
       document.body.style.overflow = "hidden";
     }
 
     function closeModal() {
-      document.getElementById("readModal").classList.remove("active");
+      document.getElementById("articleModal").classList.remove("show");
       document.body.style.overflow = "auto";
     }
 
-    function closeModalOnOverlay(e) {
-      if (e.target.id === "readModal") closeModal();
+    function onOverlayClick(e) {
+      if (e.target.id === "articleModal") closeModal();
     }
 
     function setCategory(cat) {
       currentCategory = cat;
-      document.querySelectorAll(".cat-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.innerText.toLowerCase() === cat.toLowerCase() || (cat === 'Tất cả' && btn.innerText === 'TOÀN BỘ TIN'));
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.innerText.includes(cat));
       });
-      applyFilters();
+      applyFilter();
     }
 
-    function onSearch() {
-      applyFilters();
+    function handleSearch() {
+      applyFilter();
     }
 
-    function applyFilters() {
-      const q = document.getElementById("searchInput").value.toLowerCase().trim();
-      const filtered = articlesData.filter(item => {
-        const matchCat = (currentCategory === 'Tất cả') || (item.category === currentCategory);
-        const matchSearch = item.title.toLowerCase().includes(q) || (item.summary && item.summary.toLowerCase().includes(q));
-        return matchCat && matchSearch;
+    function applyFilter() {
+      const query = document.getElementById("searchInput").value.toLowerCase().trim();
+
+      const filtered = articlesList.filter(item => {
+        const matchCategory = (currentCategory === 'Tất cả') || (item.category === currentCategory);
+        const matchSearch = item.title.toLowerCase().includes(query) || 
+                            (item.summary && item.summary.toLowerCase().includes(query));
+        return matchCategory && matchSearch;
       });
-      renderLayout(filtered);
+
+      renderCards(filtered);
     }
 
     function escapeStr(text) {
@@ -584,7 +613,7 @@
       if (e.key === "Escape") closeModal();
     });
 
-    loadNewspaper();
+    fetchNews();
   </script>
 </body>
 </html>
