@@ -26,15 +26,20 @@ SUPABASE_KEY = os.getenv(
 ).strip("[]'\" \t\n\r")
 # ======================================================
 
-# Nguồn RSS tin tức sức khỏe tổng hợp
+# Nguồn cấp đa dạng: Món ngon mỗi ngày & Sức khỏe đời sống
 FEEDS = [
+    # CHUYÊN MỤC CÔNG THỨC MÓN NGON MỖI NGÀY
+    {"source": "VnExpress Ẩm Thực", "url": "https://vnexpress.net/rss/du-lich/am-thuc.rss", "cat": "Ẩm thực & Món ngon"},
+    {"source": "VietnamNet Ẩm Thực", "url": "https://vietnamnet.vn/rss/doi-song/am-thuc.rss", "cat": "Ẩm thực & Món ngon"},
+    {"source": "Thanh Niên Ẩm Thực", "url": "https://thanhnien.vn/rss/gioi-tre/am-thuc.rss", "cat": "Ẩm thực & Món ngon"},
+    
+    # CHUYÊN MỤC SỨC KHỎE & DINH DƯỠNG
     {"source": "VnExpress Sức Khỏe", "url": "https://vnexpress.net/rss/suc-khoe.rss", "cat": "Y học đời sống"},
     {"source": "Dân Trí Sức Khỏe", "url": "https://dantri.com.vn/rss/suc-khoe.rss", "cat": "Y học đời sống"},
     {"source": "VietnamNet Sức Khỏe", "url": "https://vietnamnet.vn/rss/suc-khoe.rss", "cat": "Dinh dưỡng"}
 ]
 
-ARTICLES_PER_FEED = 20
-RECIPES_LIMIT = 5
+ARTICLES_PER_FEED =20
 
 SUPABASE_ENDPOINT = f"{SUPABASE_URL}/rest/v1/articles"
 SUPABASE_HEADERS = {
@@ -70,21 +75,25 @@ def is_article_exists(url):
     return False
 
 def scrape_article_data(url):
-    """Bóc tách bài viết từ các trang tin tức thông thường."""
+    """Bóc tách bài viết, công thức nấu nướng và ảnh minh họa đại diện."""
     try:
         res = requests.get(url, headers=REQUEST_HEADERS, timeout=12)
         if res.status_code != 200:
             return "", ""
 
         soup = BeautifulSoup(res.text, 'html.parser')
+
+        # 1. Trích xuất ảnh bìa
         image_url = ""
         meta_img = soup.find('meta', property='og:image') or soup.find('meta', attrs={'name': 'twitter:image'})
         if meta_img and meta_img.get('content'):
             image_url = meta_img['content'].strip()
 
+        # 2. Loại bỏ rác, quảng cáo
         for tag in soup(['script', 'style', 'nav', 'header', 'footer', 'aside', 'iframe', 'figure']):
             tag.decompose()
 
+        # 3. Tìm vùng bài viết theo trang báo
         content_box = None
         if "dantri.com.vn" in url:
             content_box = soup.select_one(".singular-content")
@@ -92,141 +101,58 @@ def scrape_article_data(url):
             content_box = soup.select_one("article.fck_detail")
         elif "vietnamnet.vn" in url:
             content_box = soup.select_one("#maincontent, .maincontent")
+        elif "thanhnien.vn" in url:
+            content_box = soup.select_one(".detail-content, #abody")
 
         target = content_box if content_box else soup.body
         if not target:
             return "", image_url
 
         paragraphs = target.find_all('p')
-        valid_texts = [clean_html(p.get_text()) for p in paragraphs if len(clean_html(p.get_text())) > 35]
+        valid_texts = []
+        for p in paragraphs:
+            txt = clean_html(p.get_text())
+            if len(txt) > 30 and not txt.startswith("Từ khóa:") and not txt.startswith("Ảnh:"):
+                valid_texts.append(txt)
 
         return "\n\n".join(valid_texts), image_url
     except Exception as e:
-        print(f"      [!] Lỗi bóc tách bài tin: {e}")
+        print(f"      [!] Lỗi bóc tách bài: {e}")
         return "", ""
 
-def scrape_mon_ngon_detail(url):
-    """Trích xuất chi tiết công thức nấu ăn từ monngonmoingay.com."""
-    try:
-        res = requests.get(url, headers=REQUEST_HEADERS, timeout=12)
-        if res.status_code != 200:
-            return "", "", "", "", ""
-
-        soup = BeautifulSoup(res.text, 'html.parser')
-
-        # 1. Tiêu đề món ăn
-        title_el = soup.find('h1') or soup.select_one('.entry-title')
-        title = clean_html(title_el.get_text()) if title_el else ""
-
-        # 2. Ảnh đại diện món ăn
-        image_url = ""
-        meta_img = soup.find('meta', property='og:image')
-        if meta_img and meta_img.get('content'):
-            image_url = meta_img['content'].strip()
-
-        # 3. Lời khuyên / Mẹo thực hiện
-        tips = "Mẹo làm bếp: Chuẩn bị đầy đủ gia vị và sơ chế kỹ nguyên liệu để món ăn chuẩn vị và dậy mùi thơm ngon."
-        tip_box = soup.select_one('.mach-nho, .tip-box, .recipe-tips')
-        if tip_box:
-            tips = clean_html(tip_box.get_text())
-
-        # 4. Trích xuất Nguyên liệu & Các bước thực hiện
-        sections = []
-
-        # Bóc tách phần Nguyên Liệu
-        nguyen_lieu_box = soup.select_one('.nguyen-lieu, .ingredients, .recipe-ingredients')
-        if nguyen_lieu_box:
-            lines = [clean_html(li.get_text()) for li in nguyen_lieu_box.find_all(['li', 'p']) if clean_html(li.get_text())]
-            if lines:
-                sections.append("### NGUYÊN LIỆU CHUẨN BỊ:\n" + "\n".join([f"- {l}" for l in lines]))
-
-        # Bóc tách phần Sơ Chế / Thực Hiện
-        cach_lam_box = soup.select_one('.cach-lam, .instructions, .recipe-directions, .entry-content')
-        if cach_lam_box:
-            steps = []
-            for item in cach_lam_box.find_all(['p', 'li']):
-                txt = clean_html(item.get_text())
-                if len(txt) > 20 and not txt.startswith("Từ khóa:") and not txt.startswith("Chia sẻ:"):
-                    steps.append(txt)
-            if steps:
-                sections.append("### CÁCH THỰC HIỆN:\n" + "\n\n".join(steps))
-
-        full_content = "\n\n".join(sections)
-        summary = f"Hướng dẫn công thức chi tiết và cách làm món {title} chuẩn vị, bổ dưỡng cho thực đơn bữa cơm gia đình mỗi ngày."
-
-        return title, summary, full_content, image_url, tips
-    except Exception as e:
-        print(f"      [!] Lỗi lấy chi tiết monngonmoingay: {e}")
-        return "", "", "", "", ""
-
-def harvest_mon_ngon_moi_ngay():
-    """Thu thập danh sách công thức mới nhất từ monngonmoingay.com."""
-    print("\n[*] Đang quét nguồn: monngonmoingay.com (Món ngon mỗi ngày)")
-    target_url = "https://monngonmoingay.com/tim-kiem-mon-ngon/"
+def generate_tips_and_summary(title, desc, default_cat):
+    title_clean = clean_html(title)
+    desc_clean = clean_html(desc)
     
-    try:
-        res = requests.get(target_url, headers=REQUEST_HEADERS, timeout=12)
-        if res.status_code != 200:
-            print(f"    [x] Không thể truy cập trang danh mục: Status {res.status_code}")
-            return
+    content_lower = f"{title_clean} {desc_clean}".lower()
+    category = default_cat
+    
+    cook_words = ["cách nấu", "cách làm", "món ngon", "chế biến", "nấu nướng", "nguyên liệu", "thực đơn", "món xào", "món kho", "món canh", "món nướng", "hầm", "luộc", "bí quyết nấu", "bữa cơm", "món ăn"]
+    
+    if default_cat == "Ẩm thực & Món ngon" or any(k in content_lower for k in cook_words):
+        category = "Ẩm thực & Món ngon"
+    elif any(k in content_lower for k in ["dinh dưỡng", "calo", "vitamin", "khoáng chất", "uống", "giảm cân"]):
+        category = "Dinh dưỡng"
+    elif any(k in content_lower for k in ["bệnh", "ung thư", "vi khuẩn", "ngộ độc", "bác sĩ", "thuốc", "y tế"]):
+        category = "Y học đời sống"
+    elif any(k in content_lower for k in ["tập", "ngủ", "mẹo", "thói quen", "sống khỏe", "da"]):
+        category = "Mẹo sống khỏe"
 
-        soup = BeautifulSoup(res.text, 'html.parser')
-        
-        # Tìm các liên kết bài viết công thức nấu ăn
-        recipe_links = []
-        for a in soup.find_all('a', href=True):
-            href = a['href']
-            if "monngonmoingay.com/" in href and not any(x in href for x in ['/tag/', '/category/', '/video/', '/tac-gia/', '/lien-he/']):
-                if href != "https://monngonmoingay.com/" and href not in recipe_links and href.count('/') >= 4:
-                    recipe_links.append(href)
+    summary = desc_clean if len(desc_clean) > 20 else title_clean
+    tips = "Lựa chọn nguyên liệu tươi mới, nêm nếm gia vị vừa phải để món ăn thơm ngon và giữ trọn dưỡng chất."
 
-        links_to_crawl = recipe_links[:RECIPES_LIMIT]
-        print(f"    Tìm thấy {len(recipe_links)} công thức. Xử lý {len(links_to_crawl)} món mới:")
+    if category == "Ẩm thực & Món ngon":
+        tips = "Mẹo bếp: Chuẩn bị và sơ chế sạch các nguyên liệu trước khi nấu, canh lửa phù hợp để món ăn chín đều và dậy mùi thơm."
+    elif "ngộ độc" in content_lower or "vi khuẩn" in content_lower:
+        tips = "Lưu ý ăn chín uống sôi, kiểm tra nguồn gốc và bảo quản thực phẩm đúng cách."
 
-        for url in links_to_crawl:
-            if is_article_exists(url):
-                print(f"    [-] Đã có trong DB: {url}")
-                continue
-
-            title, summary, content, image_url, tips = scrape_mon_ngon_detail(url)
-            if not title or not content:
-                continue
-
-            print(f"    -> Đang nạp công thức: {title[:45]}...")
-
-            record = {
-                "title": title,
-                "summary": summary,
-                "content": content,
-                "image_url": image_url,
-                "tips": tips,
-                "category": "Ẩm thực & Món ngon",
-                "original_url": url
-            }
-
-            try:
-                db_res = requests.post(SUPABASE_ENDPOINT, headers=SUPABASE_HEADERS, json=record, timeout=10)
-                if db_res.status_code in [200, 201]:
-                    print(f"       ✔ Đã lưu công thức: [{record['title'][:35]}] (Có ảnh: {bool(image_url)})")
-                else:
-                    print(f"       ✖ Lỗi Supabase: {db_res.status_code} - {db_res.text[:80]}")
-            except Exception as e:
-                print(f"       ✖ Lỗi kết nối DB: {e}")
-
-            time.sleep(1)
-
-    except Exception as e:
-        print(f"    [x] Lỗi quét monngonmoingay.com: {e}")
+    return title_clean, summary, tips, category
 
 print("=== BẮT ĐẦU TIẾN TRÌNH THU THẬP MÓN NGON & SỨC KHỎE ===")
 
-# 1. Cào công thức chuyên sâu từ monngonmoingay.com
-harvest_mon_ngon_moi_ngay()
-
-# 2. Cào bài viết sức khỏe từ các nguồn báo
 for feed_info in FEEDS:
     source_name = feed_info["source"]
-    print(f"\n[*] Đang quét: {source_name}")
+    print(f"\n[*] Đang quét nguồn: {source_name}")
 
     try:
         raw_xml = requests.get(feed_info["url"], headers=REQUEST_HEADERS, timeout=10).content
@@ -236,7 +162,7 @@ for feed_info in FEEDS:
         continue
 
     entries = parsed_feed.entries[:ARTICLES_PER_FEED]
-    print(f"    Tìm thấy {len(parsed_feed.entries)} bài. Xử lý {len(entries)} bài:")
+    print(f"    Tìm thấy {len(parsed_feed.entries)} bài. Đang xử lý {len(entries)} bài:")
 
     for entry in entries:
         original_title = clean_html(entry.title)
@@ -251,23 +177,24 @@ for feed_info in FEEDS:
 
         full_content, image_url = scrape_article_data(original_url)
 
-        summary = description if len(description) > 20 else original_title
-        tips = "Nên tham khảo ý kiến chuyên gia y tế hoặc cân đối dinh dưỡng khoa học hàng ngày."
+        title, summary, tips, category = generate_tips_and_summary(
+            original_title, description, feed_info["cat"]
+        )
 
         record = {
-            "title": original_title,
+            "title": title,
             "summary": summary,
             "content": full_content if full_content else summary,
             "image_url": image_url,
             "tips": tips,
-            "category": feed_info["cat"],
+            "category": category,
             "original_url": original_url
         }
 
         try:
             db_res = requests.post(SUPABASE_ENDPOINT, headers=SUPABASE_HEADERS, json=record, timeout=10)
             if db_res.status_code in [200, 201]:
-                print(f"       ✔ Đã lưu bài viết: [{feed_info['cat']}]")
+                print(f"       ✔ Đã lưu: [{category}] (Có ảnh: {bool(image_url)})")
             else:
                 print(f"       ✖ Lỗi Supabase: {db_res.status_code} - {db_res.text[:80]}")
         except Exception as e:
@@ -275,4 +202,4 @@ for feed_info in FEEDS:
 
         time.sleep(1)
 
-print("\n=== HOÀN TẤT! WEBSITE ĐÃ SẴN SÀNG XEM TIN ===")
+print("\n=== HOÀN TẤT! DỮ LIỆU ĐÃ SẴN SÀNG ===")
