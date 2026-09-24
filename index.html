@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- KHẮC PHỤC TRIỆT ĐỂ LỖI ẢNH CHỐNG HOTLINK CỦA CÁC BÁO -->
+  <!-- KHẮC PHỤC TRIỆT ĐỂ LỖI ẢNH CHỐNG HOTLINK TỪ DÂN TRÍ, VNEXPRESS, VIETNAMNET -->
   <meta name="referrer" content="no-referrer">
 
   <title>VibeLife - Tạp Chí Ẩm Thực & Sức Khỏe Gia Đình</title>
@@ -231,7 +231,7 @@
       overflow: hidden;
     }
 
-    /* HEADING DÒNG THỜI GIAN THEO NGÀY */
+    /* TIÊU ĐỀ PHÂN THEO NGÀY */
     .date-timeline-heading {
       display: flex;
       align-items: center;
@@ -254,7 +254,7 @@
       background: var(--border);
     }
 
-    /* LƯỚI CARD */
+    /* GRID THẺ */
     .articles-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -346,7 +346,7 @@
       gap: 6px;
     }
 
-    /* VIEW TRANG ĐỌC BÀI */
+    /* TRANG ĐỌC BÀI VIẾT */
     .article-page {
       background: #ffffff;
       border-radius: var(--radius-lg);
@@ -459,7 +459,7 @@
 <body>
 
   <div class="top-strip">
-    <span>BẢN TIN LIÊN TỤC</span> &bull; Cập nhật ngày, giờ và các công thức nấu ăn mới nhất năm 2026
+    <span>BẢN TIN LIÊN TỤC</span> &bull; Cập nhật ngày, giờ và các công thức nấu ăn mới nhất
   </div>
 
   <header>
@@ -535,7 +535,7 @@
         <p style="color:#94a3b8; font-size:0.9rem;">Món Ngon Gia Đình &bull; Dinh Dưỡng Khoa Học &bull; Y Học Đời Sống</p>
       </div>
     </div>
-    <div class="footer-bottom">&copy; 2026 VibeLife Magazine. All rights reserved.</div>
+    <div class="footer-bottom">&copy; VibeLife Magazine. All rights reserved.</div>
   </footer>
 
   <script>
@@ -552,33 +552,41 @@
     }
 
     function formatTimeDetail(dateStr) {
-      const d = parseDateObj(dateStr);
-      const hours = String(d.getHours()).padStart(2, '0');
-      const mins = String(d.getMinutes()).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const year = d.getFullYear();
-      return `${hours}:${mins} - ${day}/${month}/${year}`;
+      try {
+        const d = parseDateObj(dateStr);
+        const hours = String(d.getHours()).padStart(2, '0');
+        const mins = String(d.getMinutes()).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${hours}:${mins} - ${day}/${month}/${year}`;
+      } catch (e) {
+        return "Gần đây";
+      }
     }
 
     function getDateHeading(dateStr) {
-      const d = parseDateObj(dateStr);
-      const now = new Date();
-      
-      const isToday = d.toDateString() === now.toDateString();
-      const yesterday = new Date();
-      yesterday.setDate(now.getDate() - 1);
-      const isYesterday = d.toDateString() === yesterday.toDateString();
+      try {
+        const d = parseDateObj(dateStr);
+        const now = new Date();
+        
+        const isToday = d.toDateString() === now.toDateString();
+        const yesterday = new Date();
+        yesterday.setDate(now.getDate() - 1);
+        const isYesterday = d.toDateString() === yesterday.toDateString();
 
-      const daysOfWeek = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
-      const dayName = daysOfWeek[d.getDay()];
-      const day = String(d.getDate()).padStart(2, '0');
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const year = d.getFullYear();
+        const daysOfWeek = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+        const dayName = daysOfWeek[d.getDay()] || "Ngày";
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
 
-      if (isToday) return `Hôm nay (${dayName}, ${day}/${month}/${year})`;
-      if (isYesterday) return `Hôm qua (${dayName}, ${day}/${month}/${year})`;
-      return `${dayName}, Ngày ${day}/${month}/${year}`;
+        if (isToday) return `Hôm nay (${dayName}, ${day}/${month}/${year})`;
+        if (isYesterday) return `Hôm qua (${dayName}, ${day}/${month}/${year})`;
+        return `${dayName}, Ngày ${day}/${month}/${year}`;
+      } catch (e) {
+        return "Tin tức mới cập nhật";
+      }
     }
 
     async function loadData() {
@@ -589,9 +597,23 @@
             "Authorization": `Bearer ${SUPABASE_KEY}`
           }
         });
-        if (!res.ok) throw new Error("Lỗi nạp tin tức");
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || `Lỗi máy chủ: ${res.status}`);
+        }
+
         allArticles = await res.json();
-        
+
+        if (!allArticles || allArticles.length === 0) {
+          document.getElementById("groupedArticlesContainer").innerHTML = `
+            <div style="text-align: center; padding: 60px 0; color: var(--text-muted);">
+              Cơ sở dữ liệu hiện chưa có bài viết nào hoặc đang bị khóa quyền RLS.
+            </div>
+          `;
+          return;
+        }
+
         const urlParams = new URLSearchParams(window.location.search);
         const articleId = urlParams.get('id');
 
@@ -603,7 +625,8 @@
       } catch (err) {
         document.getElementById("groupedArticlesContainer").innerHTML = `
           <div style="text-align: center; padding: 40px; color: #ef4444;">
-            Không thể kết nối đến máy chủ tin tức. Vui lòng thử lại sau.
+            Không thể tải dữ liệu: ${err.message}.<br>
+            <em>(Vui lòng kiểm tra quyền RLS hoặc kết nối mạng)</em>
           </div>
         `;
       }
@@ -619,24 +642,26 @@
         return;
       }
 
-      // 1. Bài mới nhất làm Cover Hero
+      // 1. Cover Hero
       const [featured, ...others] = articles;
       const isCook = featured.category === "Ẩm thực & Món ngon";
       const fallbackImg = isCook 
         ? "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=80"
         : "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1200&q=80";
 
+      const featuredTime = featured.published_at || featured.created_at || new Date().toISOString();
+
       heroContainer.innerHTML = `
         <div class="hero-featured" onclick="showArticleDetail(${featured.id})">
           <div class="hero-img-box">
-            <img src="${featured.image_url || fallbackImg}" alt="${escapeHtml(featured.title)}">
+            <img src="${featured.image_url || fallbackImg}" alt="${escapeHtml(featured.title || '')}" onerror="this.src='${fallbackImg}'">
           </div>
           <div class="hero-text-box">
             <div class="meta-line">
               <span class="tag-badge ${isCook ? 'cook' : ''}">${escapeHtml(featured.category || 'Tiêu Điểm')}</span>
-              <span class="article-date">🕒 ${formatTimeDetail(featured.published_at || featured.created_at)}</span>
+              <span class="article-date">🕒 ${formatTimeDetail(featuredTime)}</span>
             </div>
-            <h2 class="hero-title">${escapeHtml(featured.title)}</h2>
+            <h2 class="hero-title">${escapeHtml(featured.title || '')}</h2>
             <p class="hero-summary">${escapeHtml(featured.summary || '')}</p>
             <div style="font-weight:700; color:var(--primary); font-size:0.9rem;">
               ${isCook ? '🍲 Xem công thức & cách chế biến &rarr;' : '📖 Đọc toàn bộ bài viết &rarr;'}
@@ -645,10 +670,16 @@
         </div>
       `;
 
-      // 2. Gom nhóm các bài còn lại theo Ngày / Tháng / Năm
+      if (others.length === 0) {
+        listContainer.innerHTML = "";
+        return;
+      }
+
+      // 2. Gom nhóm theo ngày
       const groups = {};
       others.forEach(item => {
-        const heading = getDateHeading(item.published_at || item.created_at);
+        const timeField = item.published_at || item.created_at || new Date().toISOString();
+        const heading = getDateHeading(timeField);
         if (!groups[heading]) groups[heading] = [];
         groups[heading].push(item);
       });
@@ -663,21 +694,26 @@
           <div class="articles-grid">
             ${items.map(item => {
               const itemCook = item.category === "Ẩm thực & Món ngon";
-              const thumb = item.image_url || (itemCook
+              const itemFallback = itemCook
                 ? "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80"
-                : "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=800&q=80");
+                : "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=800&q=80";
+              const itemTime = item.published_at || item.created_at || new Date().toISOString();
 
               return `
                 <article class="card" onclick="showArticleDetail(${item.id})">
                   <div class="card-thumb-wrap">
                     <span class="card-badge ${itemCook ? 'cook' : ''}">${escapeHtml(item.category || 'Bản Tin')}</span>
-                    <img class="card-thumb" src="${thumb}" alt="${escapeHtml(item.title)}" loading="lazy">
+                    <img class="card-thumb" 
+                         src="${item.image_url || itemFallback}" 
+                         alt="${escapeHtml(item.title || '')}" 
+                         loading="lazy"
+                         onerror="this.src='${itemFallback}'">
                   </div>
                   <div class="card-body">
                     <div class="card-time">
-                      <span>🕒 ${formatTimeDetail(item.published_at || item.created_at)}</span>
+                      <span>🕒 ${formatTimeDetail(itemTime)}</span>
                     </div>
-                    <h3 class="card-title">${escapeHtml(item.title)}</h3>
+                    <h3 class="card-title">${escapeHtml(item.title || '')}</h3>
                     <p class="card-summary">${escapeHtml(item.summary \vert{}\vert{} '')}</p>${item.tips ? `
                       <div class="card-tips">
                         <strong>${itemCook ? 'Mẹo bếp:' : 'Lời khuyên:'}</strong> ${escapeHtml(item.tips)}
@@ -703,11 +739,12 @@
       if (!art) return;
 
       const isCook = art.category === "Ẩm thực & Món ngon";
+      const artTime = art.published_at || art.created_at || new Date().toISOString();
 
       document.getElementById("articleCategoryBadge").innerText = art.category || "Bài viết";
       document.getElementById("articleCategoryBadge").className = `tag-badge ${isCook ? 'cook' : ''}`;
-      document.getElementById("detailTime").innerText = `🕒 Xuất bản: ${formatTimeDetail(art.published_at || art.created_at)}`;
-      document.getElementById("detailTitle").innerText = art.title;
+      document.getElementById("detailTime").innerText = `🕒 Xuất bản: ${formatTimeDetail(artTime)}`;
+      document.getElementById("detailTitle").innerText = art.title || "";
       document.getElementById("detailSummary").innerText = art.summary || "";
 
       const imgEl = document.getElementById("detailImg");
@@ -778,7 +815,7 @@
 
       const filtered = allArticles.filter(item => {
         const matchCat = (currentCategory === 'Tất cả') || (item.category === currentCategory);
-        const matchQuery = item.title.toLowerCase().includes(q) || 
+        const matchQuery = (item.title && item.title.toLowerCase().includes(q)) || 
                            (item.summary && item.summary.toLowerCase().includes(q));
         return matchCat && matchQuery;
       });
