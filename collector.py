@@ -35,7 +35,7 @@ FEEDS = [
     {"source": "VietnamNet Sức Khỏe", "url": "https://vietnamnet.vn/rss/suc-khoe.rss", "cat": "Dinh dưỡng"}
 ]
 
-ARTICLES_PER_FEED = 50
+ARTICLES_PER_FEED = 5
 
 SUPABASE_ENDPOINT = f"{SUPABASE_URL}/rest/v1/articles"
 SUPABASE_HEADERS = {
@@ -70,20 +70,26 @@ def is_article_exists(url):
         print(f"      [!] Lỗi kiểm tra trùng lặp: {e}")
     return False
 
-def scrape_full_content(url):
-    """Truy cập đường dẫn và bóc tách toàn bộ các đoạn văn của bài báo."""
+def scrape_article_data(url):
+    """Truy cập đường dẫn và bóc tách toàn bộ bài viết cùng link ảnh cover."""
     try:
         res = requests.get(url, headers=REQUEST_HEADERS, timeout=12)
         if res.status_code != 200:
-            return ""
+            return "", ""
 
         soup = BeautifulSoup(res.text, 'html.parser')
 
-        # Loại bỏ các thẻ rác, quảng cáo, video, iframe
+        # 1. Tìm ảnh đại diện chính (og:image hoặc twitter:image)
+        image_url = ""
+        meta_img = soup.find('meta', property='og:image') or soup.find('meta', attrs={'name': 'twitter:image'})
+        if meta_img and meta_img.get('content'):
+            image_url = meta_img['content'].strip()
+
+        # 2. Loại bỏ các thẻ rác, quảng cáo, liên kết ngoài
         for tag in soup(['script', 'style', 'nav', 'header', 'footer', 'aside', 'iframe', 'figure']):
             tag.decompose()
 
-        # Tìm khung chứa bài viết theo từng cấu trúc trang báo
+        # 3. Định danh vùng bài viết theo từng tờ báo
         content_box = None
         if "dantri.com.vn" in url:
             content_box = soup.select_one(".singular-content")
@@ -98,26 +104,25 @@ def scrape_full_content(url):
 
         target = content_box if content_box else soup.body
         if not target:
-            return ""
+            return "", image_url
 
         paragraphs = target.find_all('p')
         valid_texts = []
         for p in paragraphs:
             p_text = clean_html(p.get_text())
-            # Lọc bỏ các dòng quá ngắn (chú thích ảnh, tên tác giả, nhãn bản quyền)
             if len(p_text) > 35:
                 valid_texts.append(p_text)
 
-        return "\n\n".join(valid_texts)
+        full_content = "\n\n".join(valid_texts)
+        return full_content, image_url
     except Exception as e:
-        print(f"      [!] Lỗi bóc tách nội dung chi tiết: {e}")
-        return ""
+        print(f"      [!] Lỗi bóc tách chi tiết: {e}")
+        return "", ""
 
 def generate_tips_and_summary(title, desc, default_cat):
     title_clean = clean_html(title)
     desc_clean = clean_html(desc)
     
-    # Phân loại theo từ khóa bài báo
     content_lower = f"{title_clean} {desc_clean}".lower()
     category = default_cat
     if any(k in content_lower for k in ["món", "ẩm thực", "nấu", "bánh", "ăn", "thực đơn", "thịt", "cá"]):
@@ -129,7 +134,6 @@ def generate_tips_and_summary(title, desc, default_cat):
     elif any(k in content_lower for k in ["tập", "ngủ", "mẹo", "thói quen", "sống khỏe", "da"]):
         category = "Mẹo sống khỏe"
 
-    # Tạo tóm tắt và lời khuyên
     summary = desc_clean if len(desc_clean) > 20 else title_clean
     tips = "Nên tham khảo ý kiến chuyên gia y tế hoặc điều chỉnh chế độ ăn uống khoa học, cân đối dinh dưỡng hàng ngày."
 
@@ -169,8 +173,8 @@ for feed_info in FEEDS:
 
         print(f"    -> Đang nạp: {original_title[:45]}...")
 
-        # Cào toàn bộ nội dung bài viết từ link gốc
-        full_content = scrape_full_content(original_url)
+        # Cào toàn bộ nội dung và ảnh bài viết
+        full_content, image_url = scrape_article_data(original_url)
 
         title, summary, tips, category = generate_tips_and_summary(
             original_title, description, feed_info["cat"]
@@ -180,6 +184,7 @@ for feed_info in FEEDS:
             "title": title,
             "summary": summary,
             "content": full_content if full_content else summary,
+            "image_url": image_url,
             "tips": tips,
             "category": category,
             "original_url": original_url
@@ -188,7 +193,7 @@ for feed_info in FEEDS:
         try:
             db_res = requests.post(SUPABASE_ENDPOINT, headers=SUPABASE_HEADERS, json=record, timeout=10)
             if db_res.status_code in [200, 201]:
-                print(f"       ✔ Đã lưu thành công: [{category}] (Nội dung: {len(record['content'])} ký tự)")
+                print(f"       ✔ Đã lưu thành công: [{category}] (Nội dung: {len(record['content'])} ký tự, Có ảnh: {bool(image_url)})")
             else:
                 print(f"       ✖ Lỗi Supabase: {db_res.status_code} - {db_res.text[:80]}")
         except Exception as e:
