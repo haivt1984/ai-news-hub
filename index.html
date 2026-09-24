@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VibeLife - Tạp Chí Sống Khỏe & Dinh Dưỡng Hiện Đại</title>
+  <title>VibeLife - Món Ngon Mỗi Ngày & Sống Khỏe Hiện Đại</title>
 
-  <!-- Google Fonts: Phông chữ Inter & Outfit hiện đại -->
+  <!-- Google Fonts: Inter & Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -42,7 +42,7 @@
       line-height: 1.6;
     }
 
-    /* THANH ĐIỀU HƯỚNG TRÊN CÙNG */
+    /* HEADER */
     header {
       background: #ffffff;
       border-bottom: 1px solid var(--border-color);
@@ -66,27 +66,26 @@
     .brand-logo {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       text-decoration: none;
     }
 
     .brand-icon {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       background: linear-gradient(135deg, var(--primary), #06b6d4);
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      font-weight: 800;
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
     }
 
     .brand-text h1 {
       font-family: var(--font-heading);
-      font-size: 1.4rem;
+      font-size: 1.45rem;
       font-weight: 800;
       color: var(--text-main);
       line-height: 1.1;
@@ -95,7 +94,7 @@
     .brand-text span {
       font-size: 0.75rem;
       color: var(--primary-dark);
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.5px;
     }
 
@@ -122,14 +121,14 @@
       box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
     }
 
-    /* CONTAINER CHÍNH */
+    /* CONTAINER */
     .container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 24px;
     }
 
-    /* BANNER TƯƠI MÁT */
+    /* BANNER TƯƠI SÁNG */
     .hero-banner {
       background: linear-gradient(135deg, #059669, #0d9488, #0284c7);
       border-radius: 24px;
@@ -137,8 +136,6 @@
       margin: 28px 0;
       color: #ffffff;
       box-shadow: var(--shadow-md);
-      position: relative;
-      overflow: hidden;
     }
 
     .hero-banner h2 {
@@ -190,7 +187,7 @@
       box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
     }
 
-    /* LƯỚI TIN TỨC HIỆN ĐẠI */
+    /* LƯỚI TIN TỨC */
     .articles-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -218,7 +215,7 @@
 
     .card-thumb-wrap {
       width: 100%;
-      height: 210px;
+      height: 220px;
       overflow: hidden;
       background: #e2e8f0;
       position: relative;
@@ -239,7 +236,7 @@
       position: absolute;
       top: 14px;
       left: 14px;
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(4px);
       color: var(--primary-dark);
       font-weight: 700;
@@ -249,6 +246,11 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
       box-shadow: var(--shadow-sm);
+    }
+
+    .card-badge.cook {
+      color: #ea580c;
+      background: #fff7ed;
     }
 
     .card-content {
@@ -300,7 +302,7 @@
       font-size: 0.85rem;
     }
 
-    /* CỬA SỔ XEM BÀI VIẾT TRỌN VẸN (MODAL) */
+    /* MODAL ĐỌC BÀI */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -360,7 +362,7 @@
 
     .modal-cover {
       width: 100%;
-      max-height: 400px;
+      max-height: 420px;
       object-fit: cover;
       display: none;
     }
@@ -426,52 +428,50 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header>
     <div class="header-container">
       <a href="#" class="brand-logo">
-        <div class="brand-icon">🌿</div>
+        <div class="brand-icon">🍳</div>
         <div class="brand-text">
           <h1>VibeLife</h1>
-          <span>SỨC KHỎE & ẨM THỰC</span>
+          <span>ẨM THỰC & SỨC KHỎE</span>
         </div>
       </a>
 
       <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Tìm kiếm bài viết, món ngon..." oninput="handleSearch()">
+        <input type="text" id="searchInput" placeholder="Tìm kiếm món ăn, cách làm, mẹo vặt..." oninput="handleSearch()">
       </div>
     </div>
   </header>
 
   <main class="container">
     
-    <!-- BANNER CHÀO MỪNG TƯƠI MÁT -->
     <div class="hero-banner">
-      <h2>Khám phá Lối Sống Khỏe Mỗi Ngày</h2>
-      <p>Cập nhật những nghiên cứu dinh dưỡng mới nhất, bí quyết nấu ăn bổ dưỡng và lời khuyên sống khỏe từ các chuyên gia.</p>
+      <h2>Món Ngon Mỗi Ngày & Sống Khỏe Toàn Diện</h2>
+      <p>Tổng hợp công thức nấu ăn ngon, hướng dẫn chế biến món ngon gia đình và cẩm nang dinh dưỡng khoa học từ các chuyên gia.</p>
     </div>
 
-    <!-- THANH LỌC CHUYÊN MỤC -->
+    <!-- THANH PHÂN LOẠI CHUYÊN MỤC -->
     <div class="filter-bar">
       <button class="filter-btn active" onclick="setCategory('Tất cả')">✨ Tất cả bài viết</button>
-      <button class="filter-btn" onclick="setCategory('Y học đời sống')">🩺 Y học đời sống</button>
+      <button class="filter-btn" onclick="setCategory('Ẩm thực & Món ngon')">🍲 Món ngon mỗi ngày</button>
       <button class="filter-btn" onclick="setCategory('Dinh dưỡng')">🥑 Dinh dưỡng</button>
       <button class="filter-btn" onclick="setCategory('Mẹo sống khỏe')">🏃 Mẹo sống khỏe</button>
-      <button class="filter-btn" onclick="setCategory('Ẩm thực & Món ngon')">🍲 Ẩm thực bốn phương</button>
+      <button class="filter-btn" onclick="setCategory('Y học đời sống')">🩺 Y học đời sống</button>
     </div>
 
     <!-- LƯỚI BÀI VIẾT -->
     <div id="articlesContainer" class="articles-grid">
-      <div class="empty-prompt">Đang làm mới dữ liệu bài viết...</div>
+      <div class="empty-prompt">Đang chuẩn bị các món ăn và bài viết mới nhất...</div>
     </div>
 
   </main>
 
-  <!-- MODAL XEM CHI TIẾT BÀI BÁO -->
+  <!-- MODAL XEM CHI TIẾT BÀI VIẾT -->
   <div id="articleModal" class="modal-backdrop" onclick="onOverlayClick(event)">
     <div class="modal-dialog">
       <button class="modal-close-icon" onclick="closeModal()">&times;</button>
-      <img id="modalImg" class="modal-cover" alt="Ảnh minh họa bài viết">
+      <img id="modalImg" class="modal-cover" alt="Ảnh món ăn / bài viết">
       <div class="modal-inner">
         <span id="modalCategory" class="modal-tag"></span>
         <h2 id="modalHeading" class="modal-heading"></h2>
@@ -496,12 +496,12 @@
             "Authorization": `Bearer ${SUPABASE_KEY}`
           }
         });
-        if (!res.ok) throw new Error("Lỗi nạp tin");
+        if (!res.ok) throw new Error("Lỗi kết nối máy chủ");
         articlesList = await res.json();
         renderCards(articlesList);
       } catch (err) {
         document.getElementById("articlesContainer").innerHTML = `
-          <div class="empty-prompt">Không thể tải dữ liệu vào lúc này. Vui lòng kiểm tra lại kết nối mạng.</div>
+          <div class="empty-prompt">Không thể tải dữ liệu. Xin vui lòng thử lại sau.</div>
         `;
       }
     }
@@ -510,35 +510,42 @@
       const container = document.getElementById("articlesContainer");
 
       if (!articles || articles.length === 0) {
-        container.innerHTML = `<div class="empty-prompt">Không có bài viết nào phù hợp với tìm kiếm của bạn.</div>`;
+        container.innerHTML = `<div class="empty-prompt">Không tìm thấy bài viết hoặc món ăn nào.</div>`;
         return;
       }
 
-      container.innerHTML = articles.map(item => `
-        <article class="card" onclick="openModal(${item.id})">
-          <div class="card-thumb-wrap">
-            <span class="card-badge">${escapeStr(item.category || 'Sống khỏe')}</span>
-            <img class="card-thumb" 
-                 src="${item.image_url || 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=800&q=80'}" 
-                 alt="${escapeStr(item.title)}" 
-                 loading="lazy">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">${escapeStr(item.title)}</h3>
-            <p class="card-summary">${escapeStr(item.summary || '')}</p>
-            ${item.tips ? `
-              <div class="card-advice">
-                <span>💡</span>
-                <div>${escapeStr(item.tips)}</div>
-              </div>
-            ` : ''}
-            <div class="card-action">
-              <span>Đọc toàn bộ bài viết</span>
-              <span>&rarr;</span>
+      container.innerHTML = articles.map(item => {
+        const isCook = item.category === "Ẩm thực & Món ngon";
+        const fallbackImg = isCook 
+          ? 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80' 
+          : 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=800&q=80';
+
+        return `
+          <article class="card" onclick="openModal(${item.id})">
+            <div class="card-thumb-wrap">
+              <span class="card-badge ${isCook ? 'cook' : ''}">${escapeStr(item.category || 'Món ngon')}</span>
+              <img class="card-thumb" 
+                   src="${item.image_url || fallbackImg}" 
+                   alt="${escapeStr(item.title)}" 
+                   loading="lazy">
             </div>
-          </div>
-        </article>
-      `).join('');
+            <div class="card-content">
+              <h3 class="card-title">${escapeStr(item.title)}</h3>
+              <p class="card-summary">${escapeStr(item.summary || '')}</p>
+              ${item.tips ? `
+                <div class="card-advice">
+                  <span>${isCook ? '🍲' : '💡'}</span>
+                  <div>${escapeStr(item.tips)}</div>
+                </div>
+              ` : ''}
+              <div class="card-action">
+                <span>${isCook ? 'Xem công thức & cách nấu' : 'Đọc toàn bộ bài viết'}</span>
+                <span>&rarr;</span>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
     }
 
     function openModal(id) {
@@ -553,13 +560,14 @@
         imgEl.style.display = "none";
       }
 
-      document.getElementById("modalCategory").innerText = art.category || "Tin đời sống";
+      document.getElementById("modalCategory").innerText = art.category || "Bài viết";
       document.getElementById("modalHeading").innerText = art.title;
 
       const tipsBox = document.getElementById("modalTipsBox");
       if (art.tips) {
         tipsBox.style.display = "block";
-        tipsBox.innerHTML = `<strong>Lời khuyên chuyên gia:</strong><br>${escapeStr(art.tips)}`;
+        const isCook = art.category === "Ẩm thực & Món ngon";
+        tipsBox.innerHTML = `<strong>${isCook ? 'Bí quyết nấu ngon:' : 'Lời khuyên chuyên gia:'}</strong><br>${escapeStr(art.tips)}`;
       } else {
         tipsBox.style.display = "none";
       }
@@ -582,7 +590,7 @@
     function setCategory(cat) {
       currentCategory = cat;
       document.querySelectorAll(".filter-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.innerText.includes(cat));
+        btn.classList.toggle("active", btn.innerText.includes(cat) || (cat === 'Tất cả' && btn.innerText.includes('Tất cả')));
       });
       applyFilter();
     }
