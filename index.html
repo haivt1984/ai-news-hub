@@ -3,9 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- KHẮC PHỤC TRIỆT ĐỂ LỖI ẢNH CHỐNG HOTLINK TỪ DÂN TRÍ, VNEXPRESS, VIETNAMNET -->
+  <meta name="referrer" content="no-referrer">
+
   <title>VibeLife - Tạp Chí Ẩm Thực & Sức Khỏe Gia Đình</title>
 
-  <!-- Google Fonts: Bút pháp hiện đại, thanh lịch -->
+  <!-- Google Fonts: Phông chữ hiện đại, sang trọng -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
@@ -43,7 +47,7 @@
       min-height: 100vh;
     }
 
-    /* THANH THÔNG BÁO TRÊN CÙNG */
+    /* TOP STRIP */
     .top-strip {
       background: #0f172a;
       color: #94a3b8;
@@ -54,7 +58,7 @@
     }
     .top-strip span { color: #34d399; font-weight: 600; }
 
-    /* HEADER & THANH ĐIỀU HƯỚNG CHÍNH */
+    /* HEADER & NAV */
     header {
       background: #ffffff;
       border-bottom: 1px solid var(--border);
@@ -165,7 +169,7 @@
       color: var(--text-muted);
     }
 
-    /* KHUNG BỐ CỤC CHUNG */
+    /* MAIN CONTAINER */
     main {
       flex: 1;
       max-width: 1240px;
@@ -174,7 +178,6 @@
       width: 100%;
     }
 
-    /* VIEW 1: TRANG CHỦ & DANH SÁCH BÀI VIẾT */
     .view-section { display: none; }
     .view-section.active { display: block; animation: fadeIn 0.3s ease; }
 
@@ -183,7 +186,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* COVER STORY / BÀI VIẾT NỔI BẬT */
+    /* COVER STORY / BÀI VIẾT TIÊU ĐIỂM */
     .hero-featured {
       display: grid;
       grid-template-columns: 1.3fr 1fr;
@@ -265,7 +268,7 @@
       gap: 6px;
     }
 
-    /* TIÊU ĐỀ KHỐI CHUYÊN MỤC */
+    /* TIÊU ĐỀ KHỐI */
     .section-header {
       display: flex;
       justify-content: space-between;
@@ -291,7 +294,7 @@
       background: var(--primary);
     }
 
-    /* LƯỚI TIN THẺ CARD */
+    /* GRID THẺ BÀI VIẾT */
     .articles-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -386,7 +389,7 @@
       gap: 6px;
     }
 
-    /* VIEW 2: TRANG ĐỌC BÀI VIẾT RIÊNG BIỆT (ARTICLE PAGE) */
+    /* MÀN HÌNH BÀI VIẾT ĐỘC LẬP (ARTICLE PAGE) */
     .article-page {
       background: #ffffff;
       border-radius: var(--radius-lg);
@@ -478,7 +481,7 @@
       padding-bottom: 8px;
     }
 
-    /* FOOTER CHUẨN TÒA SOẠN */
+    /* FOOTER */
     footer {
       background: #0f172a;
       color: #cbd5e1;
@@ -548,25 +551,24 @@
       color: #64748b;
     }
 
-    /* RESPONSIVE */
     @media (max-width: 900px) {
       .hero-featured { grid-template-columns: 1fr; }
       .hero-img-box { min-height: 250px; }
       .footer-grid { grid-template-columns: 1fr; gap: 30px; }
       .article-content-container { padding: 30px 20px; }
       .article-headline { font-size: 1.8rem; }
-      .nav-menu { display: none; } /* Mobile Menu Toggle */
+      .nav-menu { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- DÒNG TIN THỜI SỰ NHỎ TRÊN CÙNG -->
+  <!-- TOP BAR -->
   <div class="top-strip">
-    <span>CẬP NHẬT MỖI NGÀY</span> &bull; Cẩm nang ẩm thực, cách nấu món ngon & nghiên cứu y khoa đời sống 2026[cite: 1]
+    <span>CẬP NHẬT MỖI NGÀY</span> &bull; Cẩm nang ẩm thực, hướng dẫn nấu món ngon & y tế dinh dưỡng đời sống 2026
   </div>
 
-  <!-- THANH HEADER CHÍNH -->
+  <!-- HEADER -->
   <header>
     <div class="nav-container">
       <div class="brand" onclick="navigateToHome()">
@@ -593,18 +595,15 @@
   </header>
 
   <main>
-    <!-- MÀN HÌNH 1: TRANG CHỦ & DANH SÁCH BÀI VIẾT (HOME VIEW) -->
+    <!-- VIEW 1: TRANG CHỦ & DANH SÁCH -->
     <section id="homeView" class="view-section active">
       
-      <!-- BÀI VIẾT TIÊU ĐIỂM COVER -->
       <div id="featuredHero"></div>
 
-      <!-- TIÊU ĐỀ DANH SÁCH -->
       <div class="section-header">
         <h2 id="currentSectionTitle" class="section-title">Tin Mới Cập Nhật</h2>
       </div>
 
-      <!-- LƯỚI DANH SÁCH BÀI BÁO / MÓN ĂN -->
       <div id="articlesGrid" class="articles-grid">
         <div style="grid-column: 1/-1; text-align: center; padding: 60px 0; color: var(--text-muted);">
           Đang nạp các món ăn và bài báo mới nhất...
@@ -613,7 +612,7 @@
 
     </section>
 
-    <!-- MÀN HÌNH 2: TRANG ĐỌC BÀI VIẾT TOÀN VĂN (ARTICLE VIEW) -->
+    <!-- VIEW 2: TRANG ĐỌC BÀI VIẾT ĐỘC LẬP -->
     <section id="articleView" class="view-section">
       <article class="article-page">
         
@@ -631,11 +630,10 @@
           <p id="detailSummary" class="article-lead"></p>
 
           <div id="detailTipsBlock" class="article-tips-block">
-            <h4 id="detailTipsTitle">💡 Lưu Ý Từ Tòa Soạn</h4>
+            <h4 id="detailTipsTitle">💡 Lưu Ý Từ Chuyên Gia</h4>
             <p id="detailTips"></p>
           </div>
 
-          <!-- NỘI DUNG TOÀN VĂN / CÔNG THỨC NGUYÊN LIỆU VÀ CÁCH NẤU -->
           <div id="detailBody" class="article-body"></div>
         </div>
 
@@ -643,12 +641,12 @@
     </section>
   </main>
 
-  <!-- CHÂN TRANG FOOTER CHUYÊN NGHIỆP -->
+  <!-- FOOTER -->
   <footer>
     <div class="footer-grid">
       <div class="footer-col">
         <h3>Tạp Chí VibeLife</h3>
-        <p>Cổng thông tin độc lập chia sẻ công thức món ngon gia đình mỗi ngày, kinh nghiệm dinh dưỡng và cập nhật kiến thức bảo vệ sức khỏe cộng đồng từ các nguồn y tế tin cậy.</p>
+        <p>Cổng thông tin chuyên biệt chia sẻ công thức món ngon gia đình mỗi ngày, kinh nghiệm dinh dưỡng và cập nhật kiến thức bảo vệ sức khỏe cộng đồng từ các nguồn y tế tin cậy.</p>
       </div>
 
       <div class="footer-col">
@@ -683,7 +681,6 @@
     let allArticles = [];
     let currentCategory = 'Tất cả';
 
-    // TẢI TOÀN BỘ DỮ LIỆU TỪ SUPABASE
     async function loadData() {
       try {
         const res = await fetch(`${SUPABASE_URL}/rest/v1/articles?select=*&order=id.desc`, {
@@ -695,7 +692,6 @@
         if (!res.ok) throw new Error("Lỗi nạp tin tức");
         allArticles = await res.json();
         
-        // Kiểm tra xem URL có chứa tham số đọc bài (?id=...) không
         const urlParams = new URLSearchParams(window.location.search);
         const articleId = urlParams.get('id');
 
@@ -707,24 +703,22 @@
       } catch (err) {
         document.getElementById("articlesGrid").innerHTML = `
           <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #ef4444;">
-            Không thể kết nối đến cơ sở dữ liệu. Vui lòng thử lại sau.
+            Không thể kết nối đến máy chủ tin tức. Vui lòng kiểm tra lại kết nối mạng.
           </div>
         `;
       }
     }
 
-    // RENDER TRANG CHỦ & PHÂN CHIA COVER STORY
     function renderHomePage(articles) {
       const heroContainer = document.getElementById("featuredHero");
       const gridContainer = document.getElementById("articlesGrid");
 
       if (!articles || articles.length === 0) {
         heroContainer.innerHTML = "";
-        gridContainer.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px 0; color: var(--text-muted);">Không có bài viết nào trong chuyên mục này.</div>`;
+        gridContainer.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px 0; color: var(--text-muted);">Không tìm thấy bài viết hoặc món ăn nào trong chuyên mục này.</div>`;
         return;
       }
 
-      // 1. Render Cover Story (Bài viết mới nhất)
       const [featured, ...others] = articles;
       const isCook = featured.category === "Ẩm thực & Món ngon";
       const fallbackImg = isCook 
@@ -748,7 +742,6 @@
         </div>
       `;
 
-      // 2. Render Danh sách bài viết thông thường
       gridContainer.innerHTML = others.map(item => {
         const itemCook = item.category === "Ẩm thực & Món ngon";
         const thumb = item.image_url || (itemCook
@@ -779,20 +772,17 @@
       }).join('');
     }
 
-    // CHUYỂN SANG MÀN HÌNH CHI TIẾT BÀI VIẾT (ARTICLE PAGE)
     function showArticleDetail(id, pushHistory = true) {
       const art = allArticles.find(a => a.id === id);
       if (!art) return;
 
       const isCook = art.category === "Ẩm thực & Món ngon";
 
-      // Cập nhật thông tin chi tiết
       document.getElementById("articleCategoryBadge").innerText = art.category || "Bài viết";
       document.getElementById("articleCategoryBadge").className = `tag-badge ${isCook ? 'cook' : ''}`;
       document.getElementById("detailTitle").innerText = art.title;
       document.getElementById("detailSummary").innerText = art.summary || "";
 
-      // Hiển thị ảnh bìa
       const imgEl = document.getElementById("detailImg");
       if (art.image_url) {
         imgEl.style.display = "block";
@@ -801,33 +791,28 @@
         imgEl.style.display = "none";
       }
 
-      // Hộp mẹo hay
       const tipsBox = document.getElementById("detailTipsBlock");
       if (art.tips) {
         tipsBox.style.display = "block";
-        document.getElementById("detailTipsTitle").innerText = isCook ? "🍳 Bí Quyết Nấu Ngon Từ Bếp Trưởng" : "💡 Lời Khuyên Chuyên Gia Y Tế";
+        document.getElementById("detailTipsTitle").innerText = isCook ? "🍳 Bí Quyết Nấu Ngon Từ Bếp Trưởng" : "💡 Lời Khuyên Chuyên Gia";
         document.getElementById("detailTips").innerText = art.tips;
       } else {
         tipsBox.style.display = "none";
       }
 
-      // Xử lý nội dung bài viết và định dạng các tiêu đề ### NGUYÊN LIỆU / CÁCH LÀM
       let formattedContent = escapeHtml(art.content || art.summary || "");
       formattedContent = formattedContent.replace(/### (.*?)\n/g, '<h3>$1</h3>');
       document.getElementById("detailBody").innerHTML = formattedContent;
 
-      // Chuyển màn hình
       document.getElementById("homeView").classList.remove("active");
       document.getElementById("articleView").classList.add("active");
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // Đẩy state vào History của trình duyệt để có thể bấm nút Back
       if (pushHistory) {
         history.pushState({ page: 'article', id: id }, art.title, `?id=${id}`);
       }
     }
 
-    // QUAY TRỞ VỀ TRANG CHỦ
     function navigateToHome(pushHistory = true) {
       document.getElementById("articleView").classList.remove("active");
       document.getElementById("homeView").classList.add("active");
@@ -838,7 +823,6 @@
       }
     }
 
-    // LẮNG NGHE NÚT BACK / FORWARD TRÊN TRÌNH DUYỆT
     window.addEventListener("popstate", (e) => {
       if (e.state && e.state.page === 'article') {
         showArticleDetail(e.state.id, false);
@@ -847,7 +831,6 @@
       }
     });
 
-    // CHUYỂN DANH MỤC
     function switchCategory(cat, el) {
       currentCategory = cat;
 
@@ -862,7 +845,6 @@
       applyFilter();
     }
 
-    // TÌM KIẾM
     function handleSearch() {
       navigateToHome(false);
       applyFilter();
@@ -889,7 +871,6 @@
         .replace(/>/g, "&gt;");
     }
 
-    // Bắt đầu tải dữ liệu khi trang sẵn sàng
     loadData();
   </script>
 </body>
