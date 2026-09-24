@@ -36,7 +36,7 @@ FEEDS = [
     {"source": "VietnamNet Sức Khỏe", "url": "https://vietnamnet.vn/rss/suc-khoe.rss", "cat": "Dinh dưỡng"}
 ]
 
-ARTICLES_PER_FEED = 5
+ARTICLES_PER_FEED = 20
 
 SUPABASE_ENDPOINT = f"{SUPABASE_URL}/rest/v1/articles"
 SUPABASE_HEADERS = {
